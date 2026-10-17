@@ -47,6 +47,33 @@ h2{
 .login-card {
     width: min(90%, 600px);
 }
+.alert-danger {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0 0 20px;
+    padding: 12px 16px;
+    border: 1px solid #f1aeb5;
+    border-radius: 8px;
+    background-color: #f8d7da;
+    color: #842029;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    text-align: left;
+}
+.alert-danger::before {
+    content: "!";
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    border-radius: 50%;
+    background-color: #842029;
+    color: white;
+    font-weight: bold;
+    vertical-align: -2px;
+}
 .user-type-card{
     display:flex;
     width: 100%;
