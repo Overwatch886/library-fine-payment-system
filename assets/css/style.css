@@ -27,7 +27,7 @@ h2{
     
 }
 
-.form input, .form textarea{
+input{
     width:100%;
     align-items: center;
     border-radius: 10px;
@@ -36,9 +36,6 @@ h2{
     height: 35px;
     margin: 5px 0px 15px;
     box-sizing: border-box;
-}
-.form textarea::selection{
-    border: 2px solid blue;
 }
 .form{
     margin: 0 auto;
