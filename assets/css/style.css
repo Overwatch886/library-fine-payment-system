@@ -1,3 +1,75 @@
+body{
+    background-color: white;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    margin-bottom: 30px;
+    min-height: 90vh;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+h2{
+    text-align: center;
+    margin-bottom: 25px;
+}
 .buttons{
     background-color: #155dfc;
+    color: white;
+    display: block;
+    border-radius: 8px;
+    margin: 10px auto;
+    border: none;
+    padding: 10px 25px;
+    cursor: pointer;
+    
+}
+.buttons:hover{
+    background-color: #021130;
+    
+}
+
+.form input, .form textarea{
+    width:100%;
+    align-items: center;
+    border-radius: 10px;
+    border: 2px solid blue;
+    padding: 5px;
+    height: 35px;
+    margin: 5px 0px 15px;
+    box-sizing: border-box;
+}
+.form textarea::selection{
+    border: 2px solid blue;
+}
+.form{
+    margin: 0 auto;
+    width:100%;
+}
+.login-card {
+    width: min(90%, 600px);
+}
+.user-type-card{
+    display:flex;
+    width: 100%;
+    margin-bottom: 25px;
+}
+.user-type{
+    text-align: center;
+    border: 2px solid grey;
+    background-color: #f9fafb;
+    flex:1;
+    cursor: pointer;
+    
+}
+.user-type:first-child {
+    border-radius: 8px 0 0 8px;
+}
+
+.user-type:last-child {
+    border-radius: 0 8px 8px 0;
+}
+
+.user-type.active {
+    background-color: #155dfc;
+    color: white;
+    border-color: #155dfc;
 }
