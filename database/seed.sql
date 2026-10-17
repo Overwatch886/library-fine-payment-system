@@ -135,9 +135,12 @@ INSERT INTO fines (fine_id, loan_id, matric_number, days_late, amount, status, c
 -- Payments (every attempt is recorded)
 -- -------------------------------------------------------------
 INSERT INTO payments (payment_id, fine_id, matric_number, amount, payment_channel, status, reference, failure_reason, time_paid) VALUES
-(1, 2, '205643', 500.00, 'card', 'successful', 'UIL-PAY-SEED-000001', NULL,
+(1, 2, '205643', 500.00, 'card', 'successful',
+    CONCAT('RCPT-', DATE_FORMAT(CURDATE() - INTERVAL 20 DAY, '%Y%m%d'), '-SEED01'), NULL,
     TIMESTAMP(CURDATE() - INTERVAL 20 DAY, '11:02:00')),
-(2, 1, '220981', 700.00, 'card', 'failed',     'UIL-PAY-SEED-000002', 'Card declined (simulated: card number ends in 0000)',
+(2, 1, '220981', 700.00, 'card', 'failed',
+    CONCAT('RCPT-', DATE_FORMAT(CURDATE() - INTERVAL  3 DAY, '%Y%m%d'), '-SEED02'),
+    'Card declined by the bank (simulated: card numbers ending in 0000 always fail).',
     TIMESTAMP(CURDATE() - INTERVAL  3 DAY, '14:30:00'));
 
 COMMIT;
