@@ -10,7 +10,7 @@
         <h2>Library Login</h2>
         
         <!-- Displays error message if login fails -->
-        <?php if (!empty($errorMessage)): ?>
+        <?php if (isset($errorMessage) && trim((string) $errorMessage) !== ''): ?>
             <div
                 id="login-error"
                 class="alert-danger"
