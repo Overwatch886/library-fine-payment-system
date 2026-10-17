@@ -1,0 +1,2 @@
+# Only PHP may read these files; block direct web access.
+Require all denied
