@@ -11,11 +11,17 @@
         
         <!-- Placeholder where PHP error message will display if login fails -->
         <!-- <?php echo $errorMessage ?? ''; ?> -->
-        <div class = "user-type-card"> 
-            <button id="administrator-user" class="user-type" type="button" data-type="administrator">As Administrator</button>
-            <button id="student-user" class="user-type active" type="button" data-type="student">As Student</button>
-        </div>
         <form id="login_form" class="form" action="login.php" method="POST">
+            <div class="user-type-card">
+                <label class="user-type">
+                    <input type="radio" name="user_type" value="administrator">
+                    As Administrator
+                </label>
+                <label class="user-type active">
+                    <input type="radio" name="user_type" value="student" checked>
+                    As Student
+                </label>
+            </div>
             <label id= "username-label" class="login-labels" for="username">Matric Number</label>
             <br>
             <input placeholder="Enter Your Matric Number" type="text" id="username" name="username" required>

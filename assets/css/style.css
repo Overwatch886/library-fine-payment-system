@@ -53,12 +53,18 @@ h2{
     margin-bottom: 25px;
 }
 .user-type{
+    position: relative;
     text-align: center;
     border: 2px solid grey;
     background-color: #f9fafb;
     flex:1;
     cursor: pointer;
+    padding: 10px;
     
+}
+.user-type input {
+    position: absolute;
+    opacity: 0;
 }
 .user-type:first-child {
     border-radius: 8px 0 0 8px;

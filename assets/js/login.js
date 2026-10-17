@@ -1,15 +1,16 @@
-const userTypeButtons = document.querySelectorAll(".user-type");
+const userTypeInputs = document.querySelectorAll("input[name='user_type']");
 const usernameLabel = document.querySelector("label[for='username']");
 const usernameInput = document.querySelector("#username");
 
-userTypeButtons.forEach(button => {
-    button.addEventListener("click", () => {
-        userTypeButtons.forEach((item) =>{
-            item.classList.remove("active");
+userTypeInputs.forEach((input) => {
+    input.addEventListener("change", () => {
+        userTypeInputs.forEach((item) => {
+            item.closest(".user-type").classList.remove("active");
         });
-        button.classList.add("active");
 
-        const isAdministrator = button.dataset.type === "administrator";
+        input.closest(".user-type").classList.add("active");
+
+        const isAdministrator = input.value === "administrator";
 
         usernameLabel.textContent = isAdministrator
             ? "Administrator Username"
