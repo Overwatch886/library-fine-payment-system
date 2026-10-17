@@ -6,21 +6,27 @@
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
-    <div class="login-card">
+    <main class="login-card">
         <h2>Library Login</h2>
         
         <!-- Placeholder where PHP error message will display if login fails -->
         <!-- <?php echo $errorMessage ?? ''; ?> -->
-
-        <form action="login.php" method="POST">
-            <label for="username">Username / Matric Number</label>
-            <input type="text" id="username" name="username" required>
+        <div class = "user-type-card"> 
+            <button id="administrator-user" class="user-type" type="button" data-type="administrator">As Administrator</button>
+            <button id="student-user" class="user-type active" type="button" data-type="student">As Student</button>
+        </div>
+        <form id="login_form" class="form" action="login.php" method="POST">
+            <label id= "username-label" class="login-labels" for="username">Matric Number</label>
             <br>
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
+            <input placeholder="Enter Your Matric Number" type="text" id="username" name="username" required>
+            <br><br>
+            <label id="password-label" class="login-labels" for="password">Password</label>
             <br>
+            <input placeholder="Enter Your Password" type="password" id="password" name="password" required>
+            <br><br>
             <button id="login-button" class="buttons" type="submit" name="submit_login">Log In</button>
         </form>
-    </div>
+    </main>
+<script src="../assets/js/login.js"></script>
 </body>
 </html>
