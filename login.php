@@ -9,3 +9,5 @@
  * Keep request handling and authentication in this file; keep presentation in the view.
  * THIS IS JUST MY RECOMMENDED IMPLEMENTATION
  */
+require __DIR__ . '/views/auth/login_view.html';
+?>
