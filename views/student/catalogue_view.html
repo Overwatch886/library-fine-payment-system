@@ -4,29 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>University Library - Catalogue</title>
-    <link rel="stylesheet" href= "assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
     <header class="page-header">
         <h1>Library Catalogue</h1>
         <nav aria-label="Primary navigation">
-            <!-- Add catalogue navigation links here. -->
+            <a href="catalogue.php">Catalogue</a>
+            <a href="login.php?logout=1">Logout</a>
         </nav>
     </header>
 
     <main class="catalogue-page">
         <section class="catalogue" aria-labelledby="catalogue-heading">
             <h2 id="catalogue-heading">Browse the Catalogue</h2>
-            <!-- Add catalogue controls and book listings here. -->
-             <form>
-                <input id="book-search-box" class="search-box" placeholder="Enter the name of the book you want to search or it's author "/>
-                <button id="book-search-button", class="buttons">Search</button>
-             </form>
+
+            <form id="search-form" class="search-controls">
+                <input
+                    id="book-search-box"
+                    class="search-box"
+                    type="text"
+                    placeholder="Search by title or author..."
+                />
+                <select id="category-filter" class="category-filter">
+                    <option value="">All Categories</option>
+                </select>
+                <button id="book-search-button" class="buttons" type="submit">Search</button>
+            </form>
+
+            <div id="book-results" class="book-results" aria-live="polite">
+                <p class="results-placeholder">Search for a book to get started.</p>
+            </div>
         </section>
     </main>
 
     <footer class="page-footer">
-        <!-- Add footer content here. -->
+        <p>&copy; University of Ibadan &mdash; Kenneth Dike Library</p>
     </footer>
+
+    <script src="assets/js/catalogue.js"></script>
 </body>
 </html>
