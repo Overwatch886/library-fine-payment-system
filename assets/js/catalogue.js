@@ -126,3 +126,4 @@ searchForm.addEventListener('submit', (e) => {
 /* ---------- init ---------- */
 
 loadCategories();
+searchBooks();
