@@ -84,7 +84,7 @@ function renderResults(books) {
                 <p class="book-category">${escapeHtml(book.category)}</p>
                 <p class="book-copies">Available: ${book.available_copies} / ${book.total_copies}</p>
                 ${available
-                    ? `<button class="buttons borrow-btn" data-book-id="${book.id}">Borrow</button>`
+                    ? `<button class="buttons borrow-btn" data-book-id="${book.book_id}">Borrow</button>`
                     : '<span class="book-unavailable">All copies borrowed</span>'}
             </div>`;
     }).join('');
