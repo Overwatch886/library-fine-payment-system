@@ -328,3 +328,57 @@ input{
     padding: 40px 20px;
     min-height: 80px;
 }
+
+/* ===== Borrow Modal ===== */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-box {
+    background: white;
+    border-radius: 12px;
+    padding: 28px 32px;
+    width: min(90%, 420px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-box h3 {
+    margin: 0 0 16px;
+    font-size: 1.2rem;
+    color: #021130;
+    text-align: center;
+}
+
+.modal-box p {
+    margin: 8px 0;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.modal-actions .buttons {
+    flex: 1;
+    margin: 0;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.modal-cancel {
+    background-color: #6c757d;
+}
+
+.modal-cancel:hover {
+    background-color: #545b62;
+}
