@@ -43,9 +43,8 @@ async function loadLoans() {
 
         const tbody = document.getElementById('loans-tbody');
         const loans = json.data;
-        console.log(loans);
         if (!loans.length) {
-            tbody.innerHTML = '<tr><td colspan="8" class="results-placeholder">No loans found.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="9" class="results-placeholder">No loans found.</td></tr>';
             return;
         }
 
