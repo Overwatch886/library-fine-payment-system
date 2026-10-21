@@ -1,4 +1,4 @@
-const API = '/api';
+const API = 'api';
 
 /** Fetch a JSON endpoint and return the parsed body. */
 async function fetchJson(url, options = {}) {
