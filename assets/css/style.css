@@ -317,3 +317,10 @@ input{
 .loans-table tr:hover td {
     background: #f0f4ff;
 }
+
+.loans-table .results-placeholder {
+    text-align: center;
+    vertical-align: middle;
+    padding: 40px 20px;
+    min-height: 80px;
+}
