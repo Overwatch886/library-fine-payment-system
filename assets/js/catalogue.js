@@ -9,6 +9,17 @@ const searchBox = document.getElementById('book-search-box');
 const categoryFilter = document.getElementById('category-filter');
 const resultsContainer = document.getElementById('book-results');
 
+/* ---------- modal elements ---------- */
+
+const modal = document.getElementById('borrow-modal');
+const modalBookTitle = document.getElementById('modal-book-title');
+const modalBorrowDate = document.getElementById('modal-borrow-date');
+const modalReturnDate = document.getElementById('modal-return-date');
+const modalConfirm = document.getElementById('modal-confirm');
+const modalCancel = document.getElementById('modal-cancel');
+
+let pendingBookId = null;
+
 /* ---------- helpers ---------- */
 
 function escapeHtml(str) {
@@ -19,6 +30,10 @@ function escapeHtml(str) {
 
 function showPlaceholder(msg) {
     resultsContainer.innerHTML = `<p class="results-placeholder">${escapeHtml(msg)}</p>`;
+}
+
+function formatDate(date) {
+    return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 /* ---------- categories ---------- */
@@ -90,31 +105,61 @@ function renderResults(books) {
     }).join('');
 
     resultsContainer.querySelectorAll('.borrow-btn').forEach((btn) => {
-        btn.addEventListener('click', () => borrowBook(Number(btn.dataset.bookId)));
+        btn.addEventListener('click', () => {
+            const bookId = Number(btn.dataset.bookId);
+            const bookTitle = btn.closest('.book-card').querySelector('h3').textContent;
+            openBorrowModal(bookId, bookTitle);
+        });
     });
 }
 
-/* ---------- borrow ---------- */
+/* ---------- borrow modal ---------- */
 
-async function borrowBook(bookId) {
+function openBorrowModal(bookId, bookTitle) {
+    pendingBookId = bookId;
+    modalBookTitle.textContent = bookTitle;
+
+    const today = new Date();
+    const returnDate = new Date(today);
+    returnDate.setDate(returnDate.getDate() + 14);
+
+    modalBorrowDate.textContent = formatDate(today);
+    modalReturnDate.textContent = formatDate(returnDate);
+
+    modal.style.display = 'flex';
+}
+
+function closeBorrowModal() {
+    modal.style.display = 'none';
+    pendingBookId = null;
+}
+
+async function confirmBorrow() {
+    if (pendingBookId === null) return;
+
     try {
         const res = await fetch(`${API}/loans/borrow.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ book_id: bookId }),
+            body: JSON.stringify({ book_id: pendingBookId }),
         });
         const json = await res.json();
 
+        closeBorrowModal();
         alert(json.message);
 
         if (json.success) {
-            searchBooks(); // refresh to update available copies
+            searchBooks();
         }
     } catch (err) {
         console.error('Borrow error:', err);
+        closeBorrowModal();
         alert('Something went wrong. Please try again.');
     }
 }
+
+modalConfirm.addEventListener('click', confirmBorrow);
+modalCancel.addEventListener('click', closeBorrowModal);
 
 /* ---------- events ---------- */
 
