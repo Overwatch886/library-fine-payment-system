@@ -255,3 +255,65 @@ input{
     color: #666;
     font-size: 0.85rem;
 }
+
+/* ===== Admin Dashboard ===== */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background: #f9fafb;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #021130;
+}
+
+.panel {
+    background: #f9fafb;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.loans-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.loans-table th,
+.loans-table td {
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.loans-table th {
+    background: #eef2ff;
+    color: #021130;
+    font-weight: bold;
+}
+
+.loans-table tr:hover td {
+    background: #f0f4ff;
+}
