@@ -382,3 +382,159 @@ input{
 .modal-cancel:hover {
     background-color: #545b62;
 }
+
+/* ===== My Loans page ===== */
+
+.loans-page {
+    width: 100%;
+    max-width: 900px;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.loans-page .panel {
+    width: 100%;
+}
+
+.loans-page .panel h2 {
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+}
+
+.panel-hint {
+    font-size: 0.85rem;
+    color: #666;
+    margin: -8px 0 12px;
+    font-style: italic;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.status-overdue {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.status-on-time {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.loans-table .buttons {
+    margin: 0;
+    padding: 6px 16px;
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+.fine-so-far {
+    color: #842029;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+/* ===== Fines section ===== */
+
+.fine-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #ddd;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.fine-item:last-child {
+    border-bottom: none;
+}
+
+.fine-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.fine-book {
+    font-weight: bold;
+    color: #021130;
+    font-size: 0.95rem;
+}
+
+.fine-amount {
+    color: #842029;
+    font-size: 0.9rem;
+}
+
+.fine-action {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.fine-action .buttons {
+    margin: 0;
+    padding: 6px 16px;
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+.paid-label {
+    font-size: 0.8rem;
+    color: #666;
+    font-style: italic;
+}
+
+.accruing-item {
+    background: #fff8e1;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 8px;
+    border: 1px solid #ffe082;
+}
+
+.accruing-item:last-child {
+    margin-bottom: 0;
+}
+
+.accruing-hint {
+    font-size: 0.8rem;
+    color: #842029;
+    font-style: italic;
+}
+
+/* ===== Payment modal form ===== */
+
+.pay-form {
+    margin-top: 16px;
+}
+
+.pay-form label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.pay-form select {
+    width: 100%;
+    height: 35px;
+    border-radius: 10px;
+    border: 2px solid blue;
+    padding: 5px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+    background: white;
+    font-family: inherit;
+}
+
+.pay-form input {
+    margin-bottom: 12px;
+}

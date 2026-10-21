@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Library - My Loans</title>
+    <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<?php
+$pageTitle = 'My Loans';
+$navLinks  = [
+    ['href' => 'catalogue.php', 'label' => 'Catalogue'],
+    ['href' => 'my_loans.php',  'label' => 'My Loans'],
+    ['href' => 'logout.php',    'label' => 'Logout'],
+];
+include __DIR__ . '/../partials/header.html';
+?>
+
+    <main class="loans-page">
+        <section class="panel" aria-labelledby="loans-heading">
+            <h2 id="loans-heading">My Active Loans</h2>
+            <div id="loans-container">
+                <p class="results-placeholder">Loading your loans...</p>
+            </div>
+        </section>
+
+        <section class="panel" aria-labelledby="accruing-heading">
+            <h2 id="accruing-heading">Accruing Fines</h2>
+            <p class="panel-hint">Books still out and past their due date. The fine grows by &#8358;100/day until you return the book.</p>
+            <div id="accruing-container">
+                <p class="results-placeholder">Loading...</p>
+            </div>
+        </section>
+
+        <section class="panel" aria-labelledby="fines-heading">
+            <h2 id="fines-heading">Saved Fines</h2>
+            <div id="fines-container">
+                <p class="results-placeholder">Loading fines...</p>
+            </div>
+        </section>
+    </main>
+
+<?php include __DIR__ . '/../partials/footer.html'; ?>
+
+    <div id="payment-modal" class="modal-overlay" style="display:none;">
+        <div class="modal-box">
+            <h3>Pay Fine</h3>
+            <p><strong>Book:</strong> <span id="pay-book-title"></span></p>
+            <p><strong>Amount:</strong> <span id="pay-amount"></span></p>
+            <div class="pay-form">
+                <label for="pay-channel">Payment Channel</label>
+                <select id="pay-channel">
+                    <option value="card">Card</option>
+                    <option value="bank_transfer">Bank Transfer</option>
+                    <option value="ussd">USSD</option>
+                </select>
+                <div id="card-number-wrap">
+                    <label for="pay-card-number">Card Number</label>
+                    <input id="pay-card-number" type="text" placeholder="e.g. 4000123456789012" maxlength="19" />
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="buttons" id="pay-confirm">Pay</button>
+                <button class="buttons modal-cancel" id="pay-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/my_loans.js"></script>
+</body>
+</html>
