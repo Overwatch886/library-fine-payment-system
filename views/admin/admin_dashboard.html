@@ -9,12 +9,13 @@
 </head>
 <body>
 
-<header class="page-header">
-    <h1>Admin Dashboard</h1>
-    <nav>
-        <a href="logout.php">Logout</a>
-    </nav>
-</header>
+<?php
+$pageTitle = 'Admin Dashboard';
+$navLinks  = [
+    ['href' => 'logout.php', 'label' => 'Logout'],
+];
+include __DIR__ . '/../partials/header.php';
+?>
 
 <main class="catalogue-page">
 
@@ -87,8 +88,9 @@
 
 </main>
 
-<script src="assets/js/admin_dashboard.js">
-</script>
+<?php include __DIR__ . '/../partials/footer.php'; ?>
+
+<script src="assets/js/admin_dashboard.js"></script>
 
 </body>
 </html>

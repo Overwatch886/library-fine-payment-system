@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+
+<?php
+$pageTitle = 'University Library';
+$navLinks  = [];
+include __DIR__ . '/../partials/header.php';
+?>
+
     <main class="login-card">
         <h2>Library Login</h2>
         
@@ -44,6 +51,9 @@
             <button id="login-button" class="buttons" type="submit" name="submit_login">Log In</button>
         </form>
     </main>
+
+<?php include __DIR__ . '/../partials/footer.php'; ?>
+
 <script src="assets/js/login.js"></script>
 </body>
 </html>

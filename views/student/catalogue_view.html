@@ -8,13 +8,15 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <header class="page-header">
-        <h1>Library Catalogue</h1>
-        <nav aria-label="Primary navigation">
-            <a href="catalogue.php">Catalogue</a>
-            <a href="logout.php">Logout</a>
-        </nav>
-    </header>
+
+<?php
+$pageTitle = 'Library Catalogue';
+$navLinks  = [
+    ['href' => 'catalogue.php', 'label' => 'Catalogue'],
+    ['href' => 'logout.php',    'label' => 'Logout'],
+];
+include __DIR__ . '/../partials/header.php';
+?>
 
     <main class="catalogue-page">
         <section class="catalogue" aria-labelledby="catalogue-heading">
@@ -39,9 +41,7 @@
         </section>
     </main>
 
-    <footer class="page-footer">
-        <p>&copy; University of Ibadan &mdash; Kenneth Dike Library</p>
-    </footer>
+<?php include __DIR__ . '/../partials/footer.php'; ?>
 
     <script src="assets/js/catalogue.js"></script>
 </body>
