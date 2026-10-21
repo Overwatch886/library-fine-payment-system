@@ -126,4 +126,54 @@ class Auth
         }
         return (int) $user['id'];
     }
+
+    /* ------------------------------------------------------------------ */
+    /*  Web-page variants: redirect to login.php instead of throwing.     */
+    /*  Use these in entry-point files (catalogue.php, my_loans.php, etc.)*/
+    /* ------------------------------------------------------------------ */
+
+    /**
+     * For web pages: redirect to login.php with a flash message
+     * if the user is not logged in. Returns the session user on success.
+     */
+    public function requireLoginForWeb(): array
+    {
+        $user = $this->currentUser();
+        if ($user === null) {
+            $_SESSION['flash'] = 'Please log in to access that page.';
+            header('Location: login.php');
+            exit;
+        }
+        return $user;
+    }
+
+    /**
+     * For web pages: redirect to login.php if not logged in,
+     * or redirect to the admin dashboard if the role is wrong.
+     * Returns the student's matric number.
+     */
+    public function requireStudentForWeb(): string
+    {
+        $user = $this->requireLoginForWeb();
+        if ($user['role'] !== 'student') {
+            header('Location: admin_dashboard.php');
+            exit;
+        }
+        return $user['id'];
+    }
+
+    /**
+     * For web pages: redirect to login.php if not logged in,
+     * or redirect to the catalogue if the role is wrong.
+     * Returns the librarian_id.
+     */
+    public function requireLibrarianForWeb(): int
+    {
+        $user = $this->requireLoginForWeb();
+        if ($user['role'] !== 'librarian') {
+            header('Location: catalogue.php');
+            exit;
+        }
+        return (int) $user['id'];
+    }
 }

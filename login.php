@@ -2,6 +2,13 @@
 
 require_once __DIR__.'/config/init.php';
 $errorMessage = '';
+$flashMessage = '';
+
+// Pick up a flash message set by the auth guards (e.g. "Please log in...").
+if (isset($_SESSION['flash'])) {
+    $flashMessage = $_SESSION['flash'];
+    unset($_SESSION['flash']);
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     try{
