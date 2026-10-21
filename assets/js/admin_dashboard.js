@@ -16,7 +16,13 @@ async function loadStats() {
         if (!json.success) return;
         const d = json.data;
         // TODO: set each stat-value element's textContent from d
-        // e.g. document.getElementById('stat-total-books').textContent = d.total_books;
+        document.getElementById('stat-total-books').textContent = d.total_books;
+        document.getElementById('stat-total-copies').textContent = d.total_copies;
+        document.getElementById('stat-copies-out').textContent = d.copies_out;
+        document.getElementById('stat-overdue-loans').textContent = d.overdue_loans;
+        document.getElementById('stat-unpaid-fines-count').textContent = d.unpaid_fines_count;
+        document.getElementById('stat-unpaid-fines-total').textContent = '₦'+d.unpaid_fines_total;
+        document.getElementById('stat-payments-collected').textContent = '₦'+d.payments_collected;
     } catch (err) {
         console.error('Stats failed:', err);
     }
@@ -37,13 +43,45 @@ async function loadLoans() {
 
         const tbody = document.getElementById('loans-tbody');
         const loans = json.data;
-
+        console.log(loans);
         if (!loans.length) {
             tbody.innerHTML = '<tr><td colspan="8" class="results-placeholder">No loans found.</td></tr>';
             return;
         }
 
         // TODO: build <tr> rows from each loan object
+        let rows='';
+        loans.forEach((loan) => {
+            let statusText, statusClass;
+            switch (true) {
+            case (loan.is_overdue):
+                statusText = 'Overdue';
+                statusClass = 'status-overdue';
+                break;
+            case (!loan.return_date):
+                statusText = 'Active';
+                statusClass = 'status-active';
+                break;
+            default:
+                statusText = 'Returned';                                                              
+                statusClass = 'status-returned'; 
+            }
+            rows+=
+            `
+            <tr>
+                <td>${loan.loan_id}</td>
+                <td>${loan.student_name}</td>
+                <td>${loan.matric_number}</td>
+                <td>${loan.book_title}</td>
+                <td>${loan.borrow_date}</td>
+                <td>${loan.due_date}</td>
+                <td>${(loan.return_date) || '—'}</td>
+                <td class="${statusClass}">${(statusText)}</td>
+                <td>₦${loan.fine_so_far}</td>
+            </tr>
+                `
+        });
+        tbody.innerHTML = rows;
         // Fields available: student_name, matric_number, book_title,
         //   borrow_date, due_date, return_date, is_overdue, days_overdue,
         //   fine_amount, fine_status, fine_so_far

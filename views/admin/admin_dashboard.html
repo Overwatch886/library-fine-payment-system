@@ -20,6 +20,10 @@
     <!-- ===== Stats ===== -->
     <section class="stats-grid">
         <div class="stat-card">
+            <span class="stat-label">Total Copies</span>
+            <span class="stat-value" id="stat-total-copies">–</span>
+        </div>
+        <div class="stat-card">
             <span class="stat-label">Total Books</span>
             <span class="stat-value" id="stat-total-books">–</span>
         </div>
@@ -40,7 +44,7 @@
             <span class="stat-value" id="stat-unpaid-fines-total">–</span>
         </div>
         <div class="stat-card">
-            <span class="stat-label">Collected</span>
+            <span class="stat-label">Fines Collected</span>
             <span class="stat-value" id="stat-payments-collected">–</span>
         </div>
     </section>
@@ -63,18 +67,19 @@
         <table class="loans-table" id="loans-table">
             <thead>
                 <tr>
+                    <th>Loan Id</th>
                     <th>Student</th>
                     <th>Matric</th>
                     <th>Book</th>
-                    <th>Borrowed</th>
-                    <th>Due</th>
-                    <th>Returned</th>
+                    <th>Borrow Date</th>
+                    <th>Due Date</th>
+                    <th>Return Date</th>
                     <th>Status</th>
                     <th>Fine</th>
                 </tr>
             </thead>
             <tbody id="loans-tbody">
-                <tr><td colspan="8" class="results-placeholder">Loading…</td></tr>
+                <tr><td colspan="8" class="results-placeholder results">Loading…</td></tr>
             </tbody>
         </table>
     </section>
