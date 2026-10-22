@@ -430,6 +430,22 @@ input{
     background-color: #545b62;
 }
 
+.modal-box input[type="date"] {
+    display: block;
+    width: 100%;
+    margin: 8px 0;
+    padding: 8px;
+}
+
+#borrow-error {
+    color: #842029;
+}
+
+.buttons:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
 /* ===== My Loans page ===== */
 
 .loans-page {

@@ -19,6 +19,9 @@ const modalConfirm = document.getElementById('modal-confirm');
 const modalCancel = document.getElementById('modal-cancel');
 
 let pendingBookId = null;
+let previousFocus = null;
+const borrowForm = document.getElementById('borrow-form');
+const borrowError = document.getElementById('borrow-error');
 
 /* ---------- helpers ---------- */
 
@@ -115,51 +118,91 @@ function renderResults(books) {
 
 /* ---------- borrow modal ---------- */
 
+function libraryToday(now = new Date()) {
+    const parts = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Africa/Lagos', year: 'numeric', month: '2-digit', day: '2-digit',
+    }).formatToParts(now);
+    const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+    return `${values.year}-${values.month}-${values.day}`;
+}
+
+function addCalendarDays(dateString, days) {
+    const date = new Date(dateString + 'T12:00:00Z');
+    date.setUTCDate(date.getUTCDate() + days);
+    return date.toISOString().slice(0, 10);
+}
+
 function openBorrowModal(bookId, bookTitle) {
+    previousFocus = document.activeElement;
     pendingBookId = bookId;
     modalBookTitle.textContent = bookTitle;
-
-    const today = new Date();
-    const returnDate = new Date(today);
-    returnDate.setDate(returnDate.getDate() + 14);
-
-    modalBorrowDate.textContent = formatDate(today);
-    modalReturnDate.textContent = formatDate(returnDate);
-
+    const today = libraryToday();
+    const maximum = Number(modal.dataset.maxLoanDays);
+    modalBorrowDate.textContent = formatDate(new Date(today + 'T12:00:00'));
+    modalReturnDate.min = addCalendarDays(today, 1);
+    modalReturnDate.max = addCalendarDays(today, maximum);
+    modalReturnDate.value = modalReturnDate.max;
+    borrowError.textContent = '';
     modal.style.display = 'flex';
+    modalReturnDate.focus();
 }
 
 function closeBorrowModal() {
+    if (modalConfirm.disabled) return;
     modal.style.display = 'none';
     pendingBookId = null;
+    previousFocus?.focus();
 }
 
-async function confirmBorrow() {
-    if (pendingBookId === null) return;
-
+async function confirmBorrow(event) {
+    event.preventDefault();
+    if (pendingBookId === null || modalConfirm.disabled || !borrowForm.reportValidity()) return;
+    modalConfirm.disabled = true;
+    modalCancel.disabled = true;
+    borrowError.textContent = '';
+    let successful = false;
     try {
         const res = await fetch(`${API}/loans/borrow.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ book_id: pendingBookId }),
+            body: JSON.stringify({ book_id: pendingBookId, due_date: modalReturnDate.value }),
         });
         const json = await res.json();
-
-        closeBorrowModal();
-        alert(json.message);
-
-        if (json.success) {
-            searchBooks();
+        successful = json.success;
+        if (successful) {
+            alert(json.message);
+        } else {
+            borrowError.textContent = json.message;
         }
     } catch (err) {
         console.error('Borrow error:', err);
+        borrowError.textContent = 'Something went wrong. Please try again.';
+    } finally {
+        modalConfirm.disabled = false;
+        modalCancel.disabled = false;
+    }
+    if (successful) {
         closeBorrowModal();
-        alert('Something went wrong. Please try again.');
+        searchBooks();
     }
 }
 
-modalConfirm.addEventListener('click', confirmBorrow);
+borrowForm.addEventListener('submit', confirmBorrow);
 modalCancel.addEventListener('click', closeBorrowModal);
+modal.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeBorrowModal();
+    if (event.key === 'Tab') {
+        const first = modalReturnDate;
+        const last = modalConfirm;
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+        }
+    }
+});
 
 /* ---------- events ---------- */
 
