@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__.'/config/init.php';
+Auth::startSession();
 $errorMessage = '';
 $flashMessage = '';
 
