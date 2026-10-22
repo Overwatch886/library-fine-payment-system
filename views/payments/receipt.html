@@ -3,16 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Receipt</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <title>University Library - Payment Receipt</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
-    <main class="container">
-        <h1>Payment Receipt</h1>
-        <div id="receipt-container" class="receipt-card">
-            <p class="results-placeholder">Loading…</p>
-        </div>
+<?php
+$pageTitle = 'Payment Receipt';
+$navLinks = $auth->currentUser()['role'] === 'student' ? [
+    ['href' => '../catalogue.php', 'label' => 'Catalogue'],
+    ['href' => '../my_loans.php', 'label' => 'My Loans'],
+    ['href' => '../loans/history.php', 'label' => 'Borrowing History'],
+    ['href' => '../logout.php', 'label' => 'Logout'],
+] : [
+    ['href' => '../admin_dashboard.php', 'label' => 'Dashboard'],
+    ['href' => '../logout.php', 'label' => 'Logout'],
+];
+include __DIR__ . '/../partials/header.html';
+?>
+    <main class="loans-page">
+        <section class="panel receipt-card" aria-labelledby="receipt-heading">
+            <h2 id="receipt-heading">Simulated Payment Record</h2>
+            <p>No real money was transferred.</p>
+            <div id="receipt-container" aria-live="polite">
+                <p class="results-placeholder">Loading receipt...</p>
+            </div>
+            <button id="print-receipt" class="buttons" type="button" hidden>Print Receipt</button>
+        </section>
     </main>
-    <script src="assets/js/payments_receipt.js"></script>
+<?php include __DIR__ . '/../partials/footer.html'; ?>
+    <script src="../assets/js/payments_receipt.js"></script>
 </body>
 </html>

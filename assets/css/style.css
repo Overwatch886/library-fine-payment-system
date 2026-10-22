@@ -345,6 +345,37 @@ input{
     white-space: nowrap;
 }
 
+.receipt-details {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 12px;
+}
+
+.receipt-details dt {
+    font-weight: bold;
+}
+
+.receipt-details dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.receipt-notice {
+    padding: 12px;
+    border-radius: 8px;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+@media print {
+    body { background: white; }
+    .page-header, .page-footer, #print-receipt { display: none; }
+    .receipt-card { border: none; }
+    .loans-page { max-width: none; padding: 0; }
+}
+
 /* ===== Borrow Modal ===== */
 
 .modal-overlay {

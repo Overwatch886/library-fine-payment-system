@@ -162,8 +162,10 @@ function renderFines(fines) {
         const statusClass = isPaid ? 'status-on-time' : 'status-overdue';
         const statusText = isPaid ? 'Paid' : 'Unpaid';
 
+        const receiptLink = fine.payment_reference
+            ? `<a href="payments/receipt.php?reference=${encodeURIComponent(fine.payment_reference)}">View Receipt</a>` : '';
         const actionCell = isPaid
-            ? `<span class="paid-label">Paid on ${formatDate(fine.paid_at)}</span>`
+            ? `<span class="paid-label">Paid on ${formatDate(fine.paid_at)}</span> ${receiptLink}`
             : `<button class="buttons pay-btn" data-fine-id="${fine.fine_id}" data-title="${escapeHtml(fine.book_title)}" data-amount="${fine.amount}">Pay</button>`;
 
         return `
@@ -248,6 +250,8 @@ async function confirmPayment() {
     const body = { fine_id: pendingFineId, channel };
     if (cardNumber) body.card_number = cardNumber;
 
+    payConfirm.disabled = true;
+    payCancel.disabled = true;
     try {
         const res = await fetch(`${API}/payments/pay.php`, {
             method: 'POST',
@@ -257,15 +261,23 @@ async function confirmPayment() {
         const json = await res.json();
 
         closePaymentModal();
-        alert(json.message);
-
-        if (json.success) {
-            loadFines();
+        const result = document.getElementById('payment-result');
+        result.textContent = json.message + ' ';
+        if (json.data?.reference) {
+            const link = document.createElement('a');
+            link.href = 'payments/receipt.php?reference=' + encodeURIComponent(json.data.reference);
+            link.textContent = json.success ? 'View Receipt' : 'View Failed Attempt';
+            result.appendChild(link);
         }
+        if (json.success) loadFines();
     } catch (err) {
         console.error('Payment error:', err);
         closePaymentModal();
         alert('Something went wrong. Please try again.');
+    } finally {
+        payConfirm.disabled = false;
+        payCancel.disabled = false;
+        payCardNumber.value = '';
     }
 }
 
