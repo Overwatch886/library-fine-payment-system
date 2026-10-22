@@ -1,13 +1,14 @@
 # Status
-Updated: 2026-10-22 | Branch: `frontend-pages`
+Updated: 2026-10-23 | Branch: `frontend-pages`
 
 ## Done
-- Backend/DB/API complete; live-tested auth, search, borrow, return, fines, pay, receipts, admin endpoints.
-- Student and librarian pages work; role guards and redirects verified.
-- Login flash fix implemented: session starts before reading the message; PHP lint passed.
-- Admin loans table: real fine amounts for returned loans, HTML escaping, refactored helpers.
+- Backend/DB/API, student/librarian pages and login flash fix implemented.
+- Admin loans: actual saved fine amounts, safe HTML output and shared helpers.
+- Borrowing History, simulated payment records and persistent receipt links implemented.
+- Borrow modal: selectable return date, Lagos calendar limits and inline error feedback.
+- Tests verified: 13 PHP unit checks and 23 isolated database/API checks passed.
 
 ## Next
-- Add Borrowing History and Payment Receipt pages (`loans/history.php`, `payments/receipt.php` already exist).
-- Add a due-date picker to the borrow modal (API already accepts `due_date`, 1-14 days).
-- Write-up: Payment flow, screenshots, testing log.
+- Verify browser flows, mobile/print layout and capture real screenshots.
+- Write code/test learning guides, payment workflow and actual testing log.
+- Human acceptance checklist remains pending review by a student or teammate.
