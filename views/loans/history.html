@@ -3,26 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Borrowing History</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <title>University Library - Borrowing History</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
-    <main class="container">
-        <h1>Borrowing History</h1>
-        <p class="results-placeholder" id="history-placeholder">Loading…</p>
-        <table id="history-table" class="data-table" hidden>
-            <thead>
-                <tr>
-                    <th>Book</th>
-                    <th>Borrowed</th>
-                    <th>Due</th>
-                    <th>Returned</th>
-                    <th>Fine</th>
-                </tr>
-            </thead>
-            <tbody id="history-tbody"></tbody>
-        </table>
+<?php
+$pageTitle = 'Borrowing History';
+$navLinks = [
+    ['href' => '../catalogue.php', 'label' => 'Catalogue'],
+    ['href' => '../my_loans.php', 'label' => 'My Loans'],
+    ['href' => 'history.php', 'label' => 'Borrowing History'],
+    ['href' => '../logout.php', 'label' => 'Logout'],
+];
+include __DIR__ . '/../partials/header.html';
+?>
+    <main class="loans-page">
+        <section class="panel" aria-labelledby="history-heading">
+            <h2 id="history-heading">All My Loans</h2>
+            <p id="history-placeholder" class="results-placeholder" role="status">Loading your borrowing history...</p>
+            <div class="table-scroll">
+                <table id="history-table" class="loans-table" hidden>
+                    <caption class="visually-hidden">Your active and returned books, newest loans first</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Book</th>
+                            <th scope="col">Borrowed</th>
+                            <th scope="col">Due</th>
+                            <th scope="col">Returned</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Saved Fine</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-tbody"></tbody>
+                </table>
+            </div>
+        </section>
     </main>
-    <script src="assets/js/loans_history.js"></script>
+<?php include __DIR__ . '/../partials/footer.html'; ?>
+    <script src="../assets/js/loans_history.js"></script>
 </body>
 </html>

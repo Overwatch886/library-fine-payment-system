@@ -329,6 +329,22 @@ input{
     min-height: 80px;
 }
 
+/* ===== History and receipt pages ===== */
+
+.table-scroll {
+    overflow-x: auto;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
 /* ===== Borrow Modal ===== */
 
 .modal-overlay {
