@@ -9,18 +9,18 @@ async function fetchJson(url, options = {}) {
     return res.json();
 }
 
-function escapeHtml(str){
+function escapeHtml(str) {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
 }
+
 /** Populate the stat cards from /admin/stats.php */
 async function loadStats() {
     try {
         const json = await fetchJson(`${API}/admin/stats.php`);
         if (!json.success) return;
         const d = json.data;
-        // TODO: set each stat-value element's textContent from d
         document.getElementById('stat-total-books').textContent = d.total_books;
         document.getElementById('stat-total-copies').textContent = d.total_copies;
         document.getElementById('stat-copies-out').textContent = d.copies_out;
@@ -53,7 +53,6 @@ async function loadLoans() {
             return;
         }
 
-        // TODO: build <tr> rows from each loan object
         let rows='';
         loans.forEach((loan) => {
             let statusText, statusClass;
@@ -67,28 +66,30 @@ async function loadLoans() {
                 statusClass = 'status-active';
                 break;
             default:
-                statusText = 'Returned';                                                              
-                statusClass = 'status-returned'; 
+                statusText = 'Returned';
+                statusClass = 'status-returned';
             }
+
+            const fineDisplay = loan.fine_amount
+                ? '₦' + loan.fine_amount
+                : '₦' + loan.fine_so_far;
+
             rows+=
             `
             <tr>
                 <td>${loan.loan_id}</td>
-                <td>${loan.student_name}</td>
-                <td>${loan.matric_number}</td>
-                <td>${loan.book_title}</td>
-                <td>${loan.borrow_date}</td>
-                <td>${loan.due_date}</td>
-                <td>${(loan.return_date) || '—'}</td>
-                <td class="${statusClass}">${(statusText)}</td>
-                <td>₦${loan.fine_so_far}</td>
+                <td>${escapeHtml(loan.student_name)}</td>
+                <td>${escapeHtml(loan.matric_number)}</td>
+                <td>${escapeHtml(loan.book_title)}</td>
+                <td>${escapeHtml(loan.borrow_date)}</td>
+                <td>${escapeHtml(loan.due_date)}</td>
+                <td>${escapeHtml(loan.return_date || '—')}</td>
+                <td class="${statusClass}">${escapeHtml(statusText)}</td>
+                <td>${escapeHtml(fineDisplay)}</td>
             </tr>
                 `
         });
         tbody.innerHTML = rows;
-        // Fields available: student_name, matric_number, book_title,
-        //   borrow_date, due_date, return_date, is_overdue, days_overdue,
-        //   fine_amount, fine_status, fine_so_far
     } catch (err) {
         console.error('Loans failed:', err);
     }
