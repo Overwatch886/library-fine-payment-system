@@ -9,6 +9,11 @@ async function fetchJson(url, options = {}) {
     return res.json();
 }
 
+function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
 /** Populate the stat cards from /admin/stats.php */
 async function loadStats() {
     try {
