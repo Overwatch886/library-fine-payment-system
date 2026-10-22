@@ -5,10 +5,11 @@
  */
 
 // ---- Database (XAMPP defaults) ----
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'ui_library');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+// Optional environment values let a separate test server use its own database.
+define('DB_HOST', getenv('LIBRARY_DB_HOST') !== false ? getenv('LIBRARY_DB_HOST') : 'localhost');
+define('DB_NAME', getenv('LIBRARY_DB_NAME') !== false ? getenv('LIBRARY_DB_NAME') : 'ui_library');
+define('DB_USER', getenv('LIBRARY_DB_USER') !== false ? getenv('LIBRARY_DB_USER') : 'root');
+define('DB_PASS', getenv('LIBRARY_DB_PASS') !== false ? getenv('LIBRARY_DB_PASS') : '');
 define('DB_CHARSET', 'utf8mb4');
 
 // ---- Library rules ----
