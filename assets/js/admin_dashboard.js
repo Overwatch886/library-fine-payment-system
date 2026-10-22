@@ -15,6 +15,38 @@ function escapeHtml(str) {
     return div.innerHTML;
 }
 
+/** Return { text, cls } for a loan's display status. */
+function getLoanStatus(loan) {
+    if (loan.is_overdue) return { text: 'Overdue', cls: 'status-overdue' };
+    if (!loan.return_date) return { text: 'Active', cls: 'status-active' };
+    return { text: 'Returned', cls: 'status-returned' };
+}
+
+/** Pick the right fine value: stored fine if returned late, else live calc. */
+function getFineDisplay(loan) {
+    return loan.fine_amount
+        ? '₦' + loan.fine_amount
+        : '₦' + loan.fine_so_far;
+}
+
+/** Build one <tr> for the loans table. */
+function renderLoanRow(loan) {
+    const { text: statusText, cls: statusClass } = getLoanStatus(loan);
+    const fineDisplay = getFineDisplay(loan);
+    return `
+    <tr>
+        <td>${loan.loan_id}</td>
+        <td>${escapeHtml(loan.student_name)}</td>
+        <td>${escapeHtml(loan.matric_number)}</td>
+        <td>${escapeHtml(loan.book_title)}</td>
+        <td>${escapeHtml(loan.borrow_date)}</td>
+        <td>${escapeHtml(loan.due_date)}</td>
+        <td>${escapeHtml(loan.return_date || '—')}</td>
+        <td class="${statusClass}">${escapeHtml(statusText)}</td>
+        <td>${escapeHtml(fineDisplay)}</td>
+    </tr>`;
+}
+
 /** Populate the stat cards from /admin/stats.php */
 async function loadStats() {
     try {
@@ -53,43 +85,7 @@ async function loadLoans() {
             return;
         }
 
-        let rows='';
-        loans.forEach((loan) => {
-            let statusText, statusClass;
-            switch (true) {
-            case (loan.is_overdue):
-                statusText = 'Overdue';
-                statusClass = 'status-overdue';
-                break;
-            case (!loan.return_date):
-                statusText = 'Active';
-                statusClass = 'status-active';
-                break;
-            default:
-                statusText = 'Returned';
-                statusClass = 'status-returned';
-            }
-
-            const fineDisplay = loan.fine_amount
-                ? '₦' + loan.fine_amount
-                : '₦' + loan.fine_so_far;
-
-            rows+=
-            `
-            <tr>
-                <td>${loan.loan_id}</td>
-                <td>${escapeHtml(loan.student_name)}</td>
-                <td>${escapeHtml(loan.matric_number)}</td>
-                <td>${escapeHtml(loan.book_title)}</td>
-                <td>${escapeHtml(loan.borrow_date)}</td>
-                <td>${escapeHtml(loan.due_date)}</td>
-                <td>${escapeHtml(loan.return_date || '—')}</td>
-                <td class="${statusClass}">${escapeHtml(statusText)}</td>
-                <td>${escapeHtml(fineDisplay)}</td>
-            </tr>
-                `
-        });
-        tbody.innerHTML = rows;
+        tbody.innerHTML = loans.map(renderLoanRow).join('');
     } catch (err) {
         console.error('Loans failed:', err);
     }
