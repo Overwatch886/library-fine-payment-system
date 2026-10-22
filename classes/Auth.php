@@ -136,12 +136,12 @@ class Auth
      * For web pages: redirect to login.php with a flash message
      * if the user is not logged in. Returns the session user on success.
      */
-    public function requireLoginForWeb(): array
+    public function requireLoginForWeb(string $basePath = ''): array
     {
         $user = $this->currentUser();
         if ($user === null) {
             $_SESSION['flash'] = 'Please log in to access that page.';
-            header('Location: login.php');
+            header('Location: ' . $basePath . 'login.php');
             exit;
         }
         return $user;
@@ -152,11 +152,11 @@ class Auth
      * or redirect to the admin dashboard if the role is wrong.
      * Returns the student's matric number.
      */
-    public function requireStudentForWeb(): string
+    public function requireStudentForWeb(string $basePath = ''): string
     {
-        $user = $this->requireLoginForWeb();
+        $user = $this->requireLoginForWeb($basePath);
         if ($user['role'] !== 'student') {
-            header('Location: admin_dashboard.php');
+            header('Location: ' . $basePath . 'admin_dashboard.php');
             exit;
         }
         return $user['id'];
@@ -167,11 +167,11 @@ class Auth
      * or redirect to the catalogue if the role is wrong.
      * Returns the librarian_id.
      */
-    public function requireLibrarianForWeb(): int
+    public function requireLibrarianForWeb(string $basePath = ''): int
     {
-        $user = $this->requireLoginForWeb();
+        $user = $this->requireLoginForWeb($basePath);
         if ($user['role'] !== 'librarian') {
-            header('Location: catalogue.php');
+            header('Location: ' . $basePath . 'catalogue.php');
             exit;
         }
         return (int) $user['id'];

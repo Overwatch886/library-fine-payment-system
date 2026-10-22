@@ -2,6 +2,6 @@
 require_once __DIR__ . '/../config/init.php';
 
 $auth = new Auth();
-$auth->requireStudentForWeb();
+$auth->requireStudentForWeb('../');
 
-include __DIR__ . '/../views/loans/history.php';
+include __DIR__ . '/../views/loans/history.html';
