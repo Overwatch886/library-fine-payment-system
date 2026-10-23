@@ -84,18 +84,20 @@ function renderLoans(loans) {
     }).join('');
 
     loansContainer.innerHTML = `
-        <table class="loans-table">
-            <thead>
-                <tr>
-                    <th>Book</th>
-                    <th>Borrowed</th>
-                    <th>Due</th>
-                    <th>Status</th>
-                    <th>Fine So Far</th>
-                </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-        </table>`;
+        <div class="table-scroll">
+            <table class="loans-table">
+                <thead>
+                    <tr>
+                        <th>Book</th>
+                        <th>Borrowed</th>
+                        <th>Due</th>
+                        <th>Status</th>
+                        <th>Fine So Far</th>
+                    </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>`;
 }
 
 /* ---------- fines (saved + accruing) ---------- */
