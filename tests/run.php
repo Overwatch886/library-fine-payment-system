@@ -20,7 +20,9 @@ try {
         require __DIR__ . '/integration.php';
         $exitCode = $runner->finish();
     } else {
-        putenv('LIBRARY_TEST_URL=' . $environment->url);
+        foreach ($environment->browserEnvironment() as $key => $value) {
+            putenv($key . '=' . $value);
+        }
         $root = dirname(__DIR__);
         $cli = $root . '/node_modules/@playwright/test/cli.js';
         if (!is_file($cli)) throw new RuntimeException('Install development dependencies with npm install first.');

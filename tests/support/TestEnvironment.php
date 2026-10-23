@@ -77,10 +77,18 @@ class TestEnvironment
 
     private function verifyOwner(): void
     {
-        if (!preg_match('/^ui_library_test_[a-f0-9]{16}$/D', $this->name) || !$this->created) {
+        if (!$this->created) {
             throw new RuntimeException('Refusing to reset/delete a database not created by this run.');
         }
-        if ($this->db->query('SELECT token FROM test_run_owner')->fetchColumn() !== $this->token) {
+        self::verifyDatabase($this->db, $this->name, $this->token);
+    }
+
+    private static function verifyDatabase(PDO $db, string $name, string $token): void
+    {
+        if (!preg_match('/^ui_library_test_[a-f0-9]{16}$/D', $name)
+            || !preg_match('/^[a-f0-9]{16}$/D', $token)
+            || $db->query('SELECT DATABASE()')->fetchColumn() !== $name
+            || $db->query('SELECT token FROM test_run_owner')->fetchColumn() !== $token) {
             throw new RuntimeException('Test database ownership check failed.');
         }
     }
@@ -88,6 +96,12 @@ class TestEnvironment
     public function reset(): void
     {
         $this->verifyOwner();
+        self::resetOwned($this->db, $this->name, $this->token);
+    }
+
+    public static function resetOwned(PDO $db, string $name, string $token): void
+    {
+        self::verifyDatabase($db, $name, $token);
         /* Never execute DROP DATABASE / CREATE DATABASE / USE from the application SQL. */
         $schema = file_get_contents(dirname(__DIR__, 2) . '/database/schema.sql');
         $prefix = '-- -------------------------------------------------------------' . "\n" . '-- People';
@@ -99,17 +113,30 @@ class TestEnvironment
         if ($count !== 1 || preg_match('/\b(?:USE|DROP\s+DATABASE|CREATE\s+DATABASE)\s+/i', $schema . $seed)) {
             throw new RuntimeException('Unsafe or unexpected database directives in test SQL.');
         }
-        $this->db->exec('DROP VIEW IF EXISTS v_loan_details, v_book_availability');
-        $this->db->exec('SET FOREIGN_KEY_CHECKS = 0');
+        $db->exec('DROP VIEW IF EXISTS v_loan_details, v_book_availability');
+        $db->exec('SET FOREIGN_KEY_CHECKS = 0');
         try {
             foreach (['payments', 'fines', 'loans', 'book_copies', 'books', 'students', 'librarians'] as $table) {
-                $this->db->exec('DROP TABLE IF EXISTS `' . $table . '`');
+                $db->exec('DROP TABLE IF EXISTS `' . $table . '`');
             }
         } finally {
-            $this->db->exec('SET FOREIGN_KEY_CHECKS = 1');
+            $db->exec('SET FOREIGN_KEY_CHECKS = 1');
         }
-        $this->db->exec($schema);
-        $this->db->exec($seed);
+        $db->exec($schema);
+        $db->exec($seed);
+    }
+
+    public function browserEnvironment(): array
+    {
+        return [
+            'LIBRARY_TEST_URL' => $this->url,
+            'LIBRARY_DB_HOST' => DB_HOST,
+            'LIBRARY_DB_NAME' => $this->name,
+            'LIBRARY_DB_USER' => DB_USER,
+            'LIBRARY_DB_PASS' => DB_PASS,
+            'LIBRARY_TEST_TOKEN' => $this->token,
+            'LIBRARY_TEST_PHP' => PHP_BINARY,
+        ];
     }
 
     public function serverLog(): string
