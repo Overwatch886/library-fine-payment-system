@@ -17,6 +17,8 @@ This record is for students, teammates and the assignment reviewer. It separates
 | `node --check tests/browser/library.spec.js` | Passed |
 | `node --check assets/js/my_loans.js` | Passed |
 | `git diff --check` | Passed at the verification checkpoint |
+| Final changed-file syntax pass | **23 PHP/JavaScript files passed**, including PHP-bearing HTML views |
+| Local guide-link check | **92 targets exist**; referenced source-line ranges stay within their files |
 
 These are named test cases, not the total number of assertions. Several cases perform multiple comparisons. The latest browser run followed the change that confined the unusual book title to its safety case and made the mobile screenshot capture only the phone viewport. An earlier successful browser run took 45.8 seconds.
 
