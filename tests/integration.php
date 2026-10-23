@@ -115,15 +115,44 @@ $integrationTest('Unpaid fines and unavailable books block borrowing', function 
     TestRunner::same(8, (int) dbValue($env, 'SELECT COUNT(*) FROM loans'));
 });
 
-$integrationTest('Own on-time return succeeds; another student and repeated return are rejected', function ($env): void {
+$integrationTest('Anonymous and student return attempts are rejected without changing loans, copies or fines', function ($env): void {
     $client = new HttpClient($env->url);
+    $before = [];
+    foreach (['loans', 'book_copies', 'fines'] as $table) {
+        $before[$table] = $env->db->query('SELECT * FROM ' . $table)->fetchAll();
+    }
+    apiResult($client->request('/api/loans/return.php', ['loan_id' => 1]), 401, false);
     $client->login();
-    apiResult($client->request('/api/loans/return.php', ['loan_id' => 3]), 404, false);
+    foreach ([1, 3] as $id) {
+        apiResult($client->request('/api/loans/return.php', ['loan_id' => $id, 'onlyForMatric' => null]), 403, false);
+    }
+    foreach ($before as $table => $rows) {
+        TestRunner::same($rows, $env->db->query('SELECT * FROM ' . $table)->fetchAll());
+    }
+});
+
+$integrationTest('Librarian on-time return releases the copy; repeated return is rejected', function ($env): void {
+    $client = new HttpClient($env->url);
+    $client->login('bakinyemi', 'administrator');
     $result = apiResult($client->request('/api/loans/return.php', ['loan_id' => 1]), 200, true);
     TestRunner::same(null, $result['fine']);
     TestRunner::same('returned', $result['loan']['status']);
+    TestRunner::same(dbValue($env, 'SELECT CURDATE()'), $result['loan']['return_date']);
     TestRunner::same('available', dbValue($env, 'SELECT status FROM book_copies WHERE copy_id = 1'));
+    TestRunner::same(0, (int) dbValue($env, 'SELECT COUNT(*) FROM fines WHERE loan_id = 1'));
     apiResult($client->request('/api/loans/return.php', ['loan_id' => 1]), 409, false);
+});
+
+$integrationTest('Librarian return rejects wrong method, invalid ID and missing loan', function ($env): void {
+    $client = new HttpClient($env->url);
+    $client->login('bakinyemi', 'administrator');
+    apiResult($client->request('/api/loans/return.php'), 405, false);
+    foreach ([[], ['loan_id' => -1], ['loan_id' => 'invalid']] as $body) {
+        apiResult($client->request('/api/loans/return.php', $body), 400, false);
+    }
+    apiResult($client->request('/api/loans/return.php', ['loan_id' => 999999]), 404, false);
+    TestRunner::same(5, (int) dbValue($env, 'SELECT COUNT(*) FROM loans WHERE return_date IS NULL'));
+    TestRunner::same(2, (int) dbValue($env, 'SELECT COUNT(*) FROM fines'));
 });
 
 $integrationTest('Late returns create one fine; very late return reaches the cap', function ($env): void {
@@ -131,10 +160,13 @@ $integrationTest('Late returns create one fine; very late return reaches the cap
     $client->login('232118');
     $fines = apiResult($client->request('/api/fines/list.php'), 200, true);
     TestRunner::same(2, count($fines['accruing']));
+    $admin = new HttpClient($env->url);
+    $admin->login('bakinyemi', 'administrator');
     foreach ([3 => '600.00', 4 => '5000.00'] as $id => $amount) {
-        $result = apiResult($client->request('/api/loans/return.php', ['loan_id' => $id]), 200, true);
+        $result = apiResult($admin->request('/api/loans/return.php', ['loan_id' => $id]), 200, true);
         TestRunner::same($amount, $result['fine']['amount']);
-        apiResult($client->request('/api/loans/return.php', ['loan_id' => $id]), 409, false);
+        TestRunner::same('available', dbValue($env, 'SELECT status FROM book_copies WHERE copy_id = ?', [$result['loan']['copy_id']]));
+        apiResult($admin->request('/api/loans/return.php', ['loan_id' => $id]), 409, false);
         TestRunner::same(1, (int) dbValue($env, 'SELECT COUNT(*) FROM fines WHERE loan_id = ?', [$id]));
     }
     TestRunner::same(0, count(apiResult($client->request('/api/fines/list.php'), 200, true)['accruing']));
@@ -202,7 +234,9 @@ $integrationTest('History shows only own active and returned loans with saved fi
     $history = apiResult($client->request('/api/loans/history.php'), 200, true);
     TestRunner::same(2, count($history));
     foreach ($history as $loan) TestRunner::same('221345', $loan['matric_number']);
-    apiResult($client->request('/api/loans/return.php', ['loan_id' => 1]), 200, true);
+    $admin = new HttpClient($env->url);
+    $admin->login('bakinyemi', 'administrator');
+    apiResult($admin->request('/api/loans/return.php', ['loan_id' => 1]), 200, true);
     $history = apiResult($client->request('/api/loans/history.php'), 200, true);
     TestRunner::truth(in_array('returned', array_column($history, 'status'), true));
     $paidStudent = new HttpClient($env->url);

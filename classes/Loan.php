@@ -97,13 +97,13 @@ class Loan
     }
 
     /**
-     * Return a borrowed book. If it is late, a fine is created.
-     * Pass $onlyForMatric when a STUDENT is returning, so they can only
-     * return their own loans. Librarians pass null and can return any loan.
+     * A librarian confirms that the physical copy has been received.
+     * If it is late, a fine is created.
      * Returns ['loan' => ..., 'fine' => ... or null].
      */
-    public function returnBook(int $loanId, ?string $onlyForMatric = null): array
+    public function returnBook(int $loanId): array
     {
+        (new Auth())->requireLibrarian();
         $this->db->beginTransaction();
         try {
             // Lock the loan so it cannot be returned twice at the same moment.
@@ -117,8 +117,7 @@ class Loan
             $stmt->execute([$loanId]);
             $loan = $stmt->fetch();
 
-            // A student asking about someone else's loan gets "not found".
-            if (!$loan || ($onlyForMatric !== null && $loan['matric_number'] !== $onlyForMatric)) {
+            if (!$loan) {
                 throw new AppException('Loan not found.', 404);
             }
             if ($loan['return_date'] !== null) {

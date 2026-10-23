@@ -54,6 +54,8 @@ include __DIR__ . '/../partials/header.html';
     <!-- ===== Loans Table ===== -->
     <section class="panel">
         <h2>Loans</h2>
+        <p class="panel-hint">Match the student's details and copy ID to the physical book before confirming a return. Confirmation closes the loan and saves any late fine.</p>
+        <p id="return-result" role="status" aria-live="polite"></p>
 
         <div class="search-controls">
             <input type="text" id="loan-search" class="search-box" placeholder="Search title or student…">
@@ -66,10 +68,12 @@ include __DIR__ . '/../partials/header.html';
             <button class="buttons" id="loan-filter-btn">Filter</button>
         </div>
 
+        <div class="table-scroll">
         <table class="loans-table" id="loans-table">
             <thead>
                 <tr>
                     <th>Loan Id</th>
+                    <th>Copy ID</th>
                     <th>Student</th>
                     <th>Matric</th>
                     <th>Book</th>
@@ -78,12 +82,14 @@ include __DIR__ . '/../partials/header.html';
                     <th>Return Date</th>
                     <th>Status</th>
                     <th>Fine</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody id="loans-tbody">
-                <tr><td colspan="9" class="results-placeholder results">Loading…</td></tr>
+                <tr><td colspan="11" class="results-placeholder results">Loading…</td></tr>
             </tbody>
         </table>
+        </div>
     </section>
 
 </main>

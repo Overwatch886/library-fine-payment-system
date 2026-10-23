@@ -23,6 +23,7 @@ include __DIR__ . '/../partials/header.html';
     <main class="loans-page">
         <section class="panel" aria-labelledby="loans-heading">
             <h2 id="loans-heading">My Active Loans</h2>
+            <p class="panel-hint">Hand your book to a librarian at the return desk. Your loan stays active until they confirm receipt. Refresh this page after confirmation.</p>
             <div id="loans-container">
                 <p class="results-placeholder">Loading your loans...</p>
             </div>
@@ -30,7 +31,7 @@ include __DIR__ . '/../partials/header.html';
 
         <section class="panel" aria-labelledby="accruing-heading">
             <h2 id="accruing-heading">Accruing Fines</h2>
-            <p class="panel-hint">Books still out and past their due date. The fine grows by &#8358;100/day until you return the book.</p>
+            <p class="panel-hint">Books still out and past their due date. The estimate grows by &#8358;100/day, capped at &#8358;5,000, until a librarian confirms the return.</p>
             <div id="accruing-container">
                 <p class="results-placeholder">Loading...</p>
             </div>

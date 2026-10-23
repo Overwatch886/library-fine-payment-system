@@ -1,5 +1,5 @@
 /*
- * My Loans page: fetch active loans, render table, handle returns,
+ * My Loans page: fetch active loans and render the table,
  * fetch fines (saved + accruing), render lists, handle payments via modal.
  */
 
@@ -80,9 +80,6 @@ function renderLoans(loans) {
                 <td>${formatDate(loan.due_date)}</td>
                 <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                 <td>${fineCell}</td>
-                <td>
-                    <button class="buttons return-btn" data-loan-id="${loan.loan_id}">Return</button>
-                </td>
             </tr>`;
     }).join('');
 
@@ -95,38 +92,10 @@ function renderLoans(loans) {
                     <th>Due</th>
                     <th>Status</th>
                     <th>Fine So Far</th>
-                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>${rows}</tbody>
         </table>`;
-
-    loansContainer.querySelectorAll('.return-btn').forEach((btn) => {
-        btn.addEventListener('click', () => returnBook(Number(btn.dataset.loanId)));
-    });
-}
-
-async function returnBook(loanId) {
-    if (!confirm('Return this book?')) return;
-
-    try {
-        const res = await fetch(`${API}/loans/return.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ loan_id: loanId }),
-        });
-        const json = await res.json();
-
-        alert(json.message);
-
-        if (json.success) {
-            loadLoans();
-            loadFines();
-        }
-    } catch (err) {
-        console.error('Return error:', err);
-        alert('Something went wrong. Please try again.');
-    }
 }
 
 /* ---------- fines (saved + accruing) ---------- */

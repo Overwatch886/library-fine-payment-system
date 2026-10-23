@@ -1,4 +1,5 @@
 const API = 'api';
+let returnPending = false;
 
 /** Fetch a JSON endpoint and return the parsed body. */
 async function fetchJson(url, options = {}) {
@@ -36,6 +37,7 @@ function renderLoanRow(loan) {
     return `
     <tr>
         <td>${loan.loan_id}</td>
+        <td>${loan.copy_id}</td>
         <td>${escapeHtml(loan.student_name)}</td>
         <td>${escapeHtml(loan.matric_number)}</td>
         <td>${escapeHtml(loan.book_title)}</td>
@@ -44,6 +46,7 @@ function renderLoanRow(loan) {
         <td>${escapeHtml(loan.return_date || '—')}</td>
         <td class="${statusClass}">${escapeHtml(statusText)}</td>
         <td>${escapeHtml(fineDisplay)}</td>
+        <td>${loan.return_date ? '—' : `<button type="button" class="buttons confirm-return-btn" data-loan-id="${Number(loan.loan_id)}" ${returnPending ? 'disabled' : ''}>Confirm return</button>`}</td>
     </tr>`;
 }
 
@@ -81,7 +84,7 @@ async function loadLoans() {
         const tbody = document.getElementById('loans-tbody');
         const loans = json.data;
         if (!loans.length) {
-            tbody.innerHTML = '<tr><td colspan="9" class="results-placeholder">No loans found.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="11" class="results-placeholder">No loans found.</td></tr>';
             return;
         }
 
@@ -90,6 +93,51 @@ async function loadLoans() {
         console.error('Loans failed:', err);
     }
 }
+
+/** Confirm physical receipt before asking the backend to close a loan. */
+async function confirmReturn(button) {
+    if (returnPending || button.disabled) return;
+    const cells = button.closest('tr').cells;
+    const received = confirm(`Have you received copy ${cells[1].textContent} of "${cells[4].textContent}" from ${cells[2].textContent} (${cells[3].textContent})? Only confirm after checking the physical copy.`);
+    if (!received) return;
+
+    const result = document.getElementById('return-result');
+    const filterButton = document.getElementById('loan-filter-btn');
+    returnPending = true;
+    filterButton.disabled = true;
+    document.querySelectorAll('.confirm-return-btn').forEach((control) => { control.disabled = true; });
+    result.textContent = 'Confirming return…';
+    try {
+        const res = await fetch(`${API}/loans/return.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ loan_id: Number(button.dataset.loanId) }),
+        });
+        if (res.status === 401) {
+            window.location.assign('login.php');
+            return;
+        }
+        const json = await res.json();
+        result.textContent = json.message;
+        if (json.success) {
+            await Promise.all([loadLoans(), loadStats()]);
+        }
+    } catch (err) {
+        console.error('Return confirmation failed:', err);
+        result.textContent = 'Could not confirm the result. Refresh the loans before trying again; the return may already have been saved.';
+    } finally {
+        returnPending = false;
+        filterButton.disabled = false;
+        document.querySelectorAll('.confirm-return-btn').forEach((control) => { control.disabled = false; });
+        if (!button.isConnected) filterButton.focus();
+    }
+}
+
+// Delegate clicks because refreshing the table replaces its buttons.
+document.getElementById('loans-tbody').addEventListener('click', (event) => {
+    const button = event.target.closest('.confirm-return-btn');
+    if (button) confirmReturn(button);
+});
 
 // Wire up the filter button
 document.getElementById('loan-filter-btn').addEventListener('click', loadLoans);
