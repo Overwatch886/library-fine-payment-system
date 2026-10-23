@@ -166,7 +166,7 @@ function renderFines(fines) {
             ? `<a href="payments/receipt.php?reference=${encodeURIComponent(fine.payment_reference)}">View Receipt</a>` : '';
         const actionCell = isPaid
             ? `<span class="paid-label">Paid on ${formatDate(fine.paid_at)}</span> ${receiptLink}`
-            : `<button class="buttons pay-btn" data-fine-id="${fine.fine_id}" data-title="${escapeHtml(fine.book_title)}" data-amount="${fine.amount}">Pay</button>`;
+            : `<button class="buttons pay-btn" data-fine-id="${fine.fine_id}" data-amount="${fine.amount}">Pay</button>`;
 
         return `
             <div class="fine-item">
@@ -187,7 +187,7 @@ function renderFines(fines) {
         btn.addEventListener('click', () => {
             openPaymentModal(
                 Number(btn.dataset.fineId),
-                btn.dataset.title,
+                btn.closest('.fine-item').querySelector('.fine-book').textContent,
                 Number(btn.dataset.amount)
             );
         });
