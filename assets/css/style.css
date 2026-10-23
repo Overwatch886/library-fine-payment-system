@@ -117,7 +117,7 @@ input{
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     padding: 16px 20px;
     box-sizing: border-box;
     border-bottom: 2px solid #155dfc;
@@ -133,16 +133,27 @@ input{
 
 .page-header nav {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 12px;
+    background-color: #eef2ff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 500px;
 }
 
 .page-header nav a {
-    margin-left: 0;
+    margin: 0;
+    padding: 6px 12px;
     color: #155dfc;
+    background-color: white;
+    border: 1px solid #c7d2fe;
+    border-radius: 6px;
     text-decoration: none;
     font-weight: bold;
+    font-size: 0.9rem;
+    white-space: nowrap;
 }
 
 .page-header nav a:hover {
