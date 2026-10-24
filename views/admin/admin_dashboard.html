@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | UI Library</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+</head>
+<body>
+
+<?php
+$pageTitle = 'Admin Dashboard';
+$navLinks  = [
+    ['href' => 'logout.php', 'label' => 'Logout'],
+];
+include __DIR__ . '/../partials/header.html';
+?>
+
+<main class="catalogue-page">
+
+    <!-- ===== Stats ===== -->
+    <section class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-label">Total Copies</span>
+            <span class="stat-value" id="stat-total-copies">–</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Total Books</span>
+            <span class="stat-value" id="stat-total-books">–</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Copies Out</span>
+            <span class="stat-value" id="stat-copies-out">–</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Overdue Loans</span>
+            <span class="stat-value" id="stat-overdue-loans">–</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Unpaid Fines</span>
+            <span class="stat-value" id="stat-unpaid-fines-count">–</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Unpaid Total</span>
+            <span class="stat-value" id="stat-unpaid-fines-total">–</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Fines Collected</span>
+            <span class="stat-value" id="stat-payments-collected">–</span>
+        </div>
+    </section>
+
+    <!-- ===== Loans Table ===== -->
+    <section class="panel">
+        <h2>Loans</h2>
+        <p class="panel-hint">Match the student's details and copy ID to the physical book before confirming a return. Confirmation closes the loan and saves any late fine.</p>
+        <p id="return-result" role="status" aria-live="polite"></p>
+
+        <div class="search-controls">
+            <input type="text" id="loan-search" class="search-box" placeholder="Search title or student…">
+            <select id="loan-status" class="category-filter">
+                <option value="">All</option>
+                <option value="active">Active</option>
+                <option value="overdue">Overdue</option>
+                <option value="returned">Returned</option>
+            </select>
+            <button class="buttons" id="loan-filter-btn">Filter</button>
+        </div>
+
+        <div class="table-scroll">
+        <table class="loans-table" id="loans-table">
+            <thead>
+                <tr>
+                    <th>Loan Id</th>
+                    <th>Copy ID</th>
+                    <th>Student</th>
+                    <th>Matric</th>
+                    <th>Book</th>
+                    <th>Borrow Date</th>
+                    <th>Due Date</th>
+                    <th>Return Date</th>
+                    <th>Status</th>
+                    <th>Fine</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="loans-tbody">
+                <tr><td colspan="11" class="results-placeholder results">Loading…</td></tr>
+            </tbody>
+        </table>
+        </div>
+    </section>
+
+</main>
+
+<?php include __DIR__ . '/../partials/footer.html'; ?>
+
+<script src="assets/js/admin_dashboard.js"></script>
+
+</body>
+</html>

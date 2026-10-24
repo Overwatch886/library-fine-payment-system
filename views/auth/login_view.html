@@ -4,12 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>University Library - Login</title>
+    <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+
+<?php
+$pageTitle = 'University Library';
+$navLinks  = [];
+include __DIR__ . '/../partials/header.html';
+?>
+
     <main class="login-card">
         <h2>Library Login</h2>
-        
+
+        <!-- Flash message: shown when redirected here from a protected page -->
+        <?php if (!empty($flashMessage)): ?>
+            <div
+                id="login-flash"
+                class="alert-danger"
+                role="alert"
+                aria-live="assertive"
+            >
+                <?php echo htmlspecialchars($flashMessage, ENT_QUOTES, 'UTF-8'); ?>
+            </div>
+        <?php endif; ?>
+
         <!-- Displays error message if login fails -->
         <?php if (!empty($errorMessage)): ?>
             <div
@@ -43,6 +63,9 @@
             <button id="login-button" class="buttons" type="submit" name="submit_login">Log In</button>
         </form>
     </main>
+
+<?php include __DIR__ . '/../partials/footer.html'; ?>
+
 <script src="assets/js/login.js"></script>
 </body>
 </html>

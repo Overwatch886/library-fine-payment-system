@@ -1,0 +1,12 @@
+{
+  "name": "library-fine-payment-system",
+  "private": true,
+  "scripts": {
+    "test:unit": "php tests/unit.php",
+    "test:integration": "php tests/run.php integration",
+    "test:browser": "php tests/run.php browser"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.58.2"
+  }
+}

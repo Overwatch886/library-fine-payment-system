@@ -1,3 +1,7 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 body{
     background-color: white;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
@@ -111,8 +115,9 @@ input{
     width: 100%;
     max-width: 900px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    gap: 14px;
     padding: 16px 20px;
     box-sizing: border-box;
     border-bottom: 2px solid #155dfc;
@@ -123,13 +128,32 @@ input{
     font-size: 1.4rem;
     margin: 0;
     color: #021130;
+    text-align: center;
+}
+
+.page-header nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 12px;
+    background-color: #eef2ff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 500px;
 }
 
 .page-header nav a {
-    margin-left: 16px;
+    margin: 0;
+    padding: 6px 12px;
     color: #155dfc;
+    background-color: white;
+    border: 1px solid #c7d2fe;
+    border-radius: 6px;
     text-decoration: none;
     font-weight: bold;
+    font-size: 0.9rem;
+    white-space: nowrap;
 }
 
 .page-header nav a:hover {
@@ -254,4 +278,346 @@ input{
     margin-top: auto;
     color: #666;
     font-size: 0.85rem;
+}
+
+/* ===== Admin Dashboard ===== */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background: #f9fafb;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #021130;
+}
+
+.panel {
+    background: #f9fafb;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.loans-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.loans-table th,
+.loans-table td {
+    padding: 8px 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.loans-table th {
+    background: #eef2ff;
+    color: #021130;
+    font-weight: bold;
+}
+
+.loans-table tr:hover td {
+    background: #f0f4ff;
+}
+
+.loans-table .results-placeholder {
+    text-align: center;
+    vertical-align: middle;
+    padding: 40px 20px;
+    min-height: 80px;
+}
+
+/* ===== History and receipt pages ===== */
+
+.table-scroll {
+    overflow-x: auto;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.receipt-details {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 12px;
+}
+
+.receipt-details dt {
+    font-weight: bold;
+}
+
+.receipt-details dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.receipt-notice {
+    padding: 12px;
+    border-radius: 8px;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+@media print {
+    body { background: white; }
+    .page-header, .page-footer, #print-receipt { display: none; }
+    .receipt-card { border: none; }
+    .loans-page { max-width: none; padding: 0; }
+}
+
+/* ===== Borrow Modal ===== */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-box {
+    background: white;
+    border-radius: 12px;
+    padding: 28px 32px;
+    width: min(90%, 420px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-box h3 {
+    margin: 0 0 16px;
+    font-size: 1.2rem;
+    color: #021130;
+    text-align: center;
+}
+
+.modal-box p {
+    margin: 8px 0;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.modal-actions .buttons {
+    flex: 1;
+    margin: 0;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.modal-cancel {
+    background-color: #6c757d;
+}
+
+.modal-cancel:hover {
+    background-color: #545b62;
+}
+
+.modal-box input[type="date"] {
+    display: block;
+    width: 100%;
+    margin: 8px 0;
+    padding: 8px;
+}
+
+#borrow-error {
+    color: #842029;
+}
+
+.buttons:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+/* ===== My Loans page ===== */
+
+.loans-page {
+    width: 100%;
+    max-width: 900px;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.loans-page .panel {
+    width: 100%;
+}
+
+.loans-page .panel h2 {
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+}
+
+.panel-hint {
+    font-size: 0.85rem;
+    color: #666;
+    margin: -8px 0 12px;
+    font-style: italic;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.status-overdue {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.status-on-time {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.loans-table .buttons {
+    margin: 0;
+    padding: 6px 16px;
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+.fine-so-far {
+    color: #842029;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+/* ===== Fines section ===== */
+
+.fine-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #ddd;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.fine-item:last-child {
+    border-bottom: none;
+}
+
+.fine-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.fine-book {
+    font-weight: bold;
+    color: #021130;
+    font-size: 0.95rem;
+}
+
+.fine-amount {
+    color: #842029;
+    font-size: 0.9rem;
+}
+
+.fine-action {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.fine-action .buttons {
+    margin: 0;
+    padding: 6px 16px;
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+.paid-label {
+    font-size: 0.8rem;
+    color: #666;
+    font-style: italic;
+}
+
+.accruing-item {
+    background: #fff8e1;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 8px;
+    border: 1px solid #ffe082;
+}
+
+.accruing-item:last-child {
+    margin-bottom: 0;
+}
+
+.accruing-hint {
+    font-size: 0.8rem;
+    color: #842029;
+    font-style: italic;
+}
+
+/* ===== Payment modal form ===== */
+
+.pay-form {
+    margin-top: 16px;
+}
+
+.pay-form label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.pay-form select {
+    width: 100%;
+    height: 35px;
+    border-radius: 10px;
+    border: 2px solid blue;
+    padding: 5px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+    background: white;
+    font-family: inherit;
+}
+
+.pay-form input {
+    margin-bottom: 12px;
 }

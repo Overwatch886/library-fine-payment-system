@@ -4,16 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>University Library - Catalogue</title>
+    <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <header class="page-header">
-        <h1>Library Catalogue</h1>
-        <nav aria-label="Primary navigation">
-            <a href="catalogue.php">Catalogue</a>
-            <a href="logout.php">Logout</a>
-        </nav>
-    </header>
+
+<?php
+$pageTitle = 'Library Catalogue';
+$navLinks  = [
+    ['href' => 'catalogue.php', 'label' => 'Catalogue'],
+    ['href' => 'my_loans.php',  'label' => 'My Loans'],
+    ['href' => 'loans/history.php', 'label' => 'Borrowing History'],
+    ['href' => 'logout.php',    'label' => 'Logout'],
+];
+include __DIR__ . '/../partials/header.html';
+?>
 
     <main class="catalogue-page">
         <section class="catalogue" aria-labelledby="catalogue-heading">
@@ -38,9 +43,23 @@
         </section>
     </main>
 
-    <footer class="page-footer">
-        <p>&copy; University of Ibadan &mdash; Kenneth Dike Library</p>
-    </footer>
+<?php include __DIR__ . '/../partials/footer.html'; ?>
+
+    <div id="borrow-modal" class="modal-overlay" style="display:none;" data-max-loan-days="<?= MAX_LOAN_DAYS ?>">
+        <form id="borrow-form" class="modal-box" role="dialog" aria-modal="true" aria-labelledby="borrow-heading">
+            <h3 id="borrow-heading">Borrow Book</h3>
+            <p><strong>Title:</strong> <span id="modal-book-title"></span></p>
+            <p><strong>Borrow Date:</strong> <span id="modal-borrow-date"></span></p>
+            <label for="modal-return-date">Return date</label>
+            <input id="modal-return-date" type="date" required aria-describedby="due-date-hint borrow-error">
+            <p id="due-date-hint">Choose a date 1–<?= MAX_LOAN_DAYS ?> days from today.</p>
+            <p id="borrow-error" role="alert"></p>
+            <div class="modal-actions">
+                <button class="buttons modal-cancel" id="modal-cancel" type="button">Cancel</button>
+                <button class="buttons" id="modal-confirm" type="submit">Confirm</button>
+            </div>
+        </form>
+    </div>
 
     <script src="assets/js/catalogue.js"></script>
 </body>

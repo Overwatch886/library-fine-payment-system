@@ -9,6 +9,20 @@ const searchBox = document.getElementById('book-search-box');
 const categoryFilter = document.getElementById('category-filter');
 const resultsContainer = document.getElementById('book-results');
 
+/* ---------- modal elements ---------- */
+
+const modal = document.getElementById('borrow-modal');
+const modalBookTitle = document.getElementById('modal-book-title');
+const modalBorrowDate = document.getElementById('modal-borrow-date');
+const modalReturnDate = document.getElementById('modal-return-date');
+const modalConfirm = document.getElementById('modal-confirm');
+const modalCancel = document.getElementById('modal-cancel');
+
+let pendingBookId = null;
+let previousFocus = null;
+const borrowForm = document.getElementById('borrow-form');
+const borrowError = document.getElementById('borrow-error');
+
 /* ---------- helpers ---------- */
 
 function escapeHtml(str) {
@@ -19,6 +33,10 @@ function escapeHtml(str) {
 
 function showPlaceholder(msg) {
     resultsContainer.innerHTML = `<p class="results-placeholder">${escapeHtml(msg)}</p>`;
+}
+
+function formatDate(date) {
+    return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 /* ---------- categories ---------- */
@@ -90,31 +108,101 @@ function renderResults(books) {
     }).join('');
 
     resultsContainer.querySelectorAll('.borrow-btn').forEach((btn) => {
-        btn.addEventListener('click', () => borrowBook(Number(btn.dataset.bookId)));
+        btn.addEventListener('click', () => {
+            const bookId = Number(btn.dataset.bookId);
+            const bookTitle = btn.closest('.book-card').querySelector('h3').textContent;
+            openBorrowModal(bookId, bookTitle);
+        });
     });
 }
 
-/* ---------- borrow ---------- */
+/* ---------- borrow modal ---------- */
 
-async function borrowBook(bookId) {
+function libraryToday(now = new Date()) {
+    const parts = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Africa/Lagos', year: 'numeric', month: '2-digit', day: '2-digit',
+    }).formatToParts(now);
+    const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+    return `${values.year}-${values.month}-${values.day}`;
+}
+
+function addCalendarDays(dateString, days) {
+    const date = new Date(dateString + 'T12:00:00Z');
+    date.setUTCDate(date.getUTCDate() + days);
+    return date.toISOString().slice(0, 10);
+}
+
+function openBorrowModal(bookId, bookTitle) {
+    previousFocus = document.activeElement;
+    pendingBookId = bookId;
+    modalBookTitle.textContent = bookTitle;
+    const today = libraryToday();
+    const maximum = Number(modal.dataset.maxLoanDays);
+    modalBorrowDate.textContent = formatDate(new Date(today + 'T12:00:00'));
+    modalReturnDate.min = addCalendarDays(today, 1);
+    modalReturnDate.max = addCalendarDays(today, maximum);
+    modalReturnDate.value = modalReturnDate.max;
+    borrowError.textContent = '';
+    modal.style.display = 'flex';
+    modalReturnDate.focus();
+}
+
+function closeBorrowModal() {
+    if (modalConfirm.disabled) return;
+    modal.style.display = 'none';
+    pendingBookId = null;
+    previousFocus?.focus();
+}
+
+async function confirmBorrow(event) {
+    event.preventDefault();
+    if (pendingBookId === null || modalConfirm.disabled || !borrowForm.reportValidity()) return;
+    modalConfirm.disabled = true;
+    modalCancel.disabled = true;
+    borrowError.textContent = '';
+    let successful = false;
     try {
         const res = await fetch(`${API}/loans/borrow.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ book_id: bookId }),
+            body: JSON.stringify({ book_id: pendingBookId, due_date: modalReturnDate.value }),
         });
         const json = await res.json();
-
-        alert(json.message);
-
-        if (json.success) {
-            searchBooks(); // refresh to update available copies
+        successful = json.success;
+        if (successful) {
+            alert(json.message);
+        } else {
+            borrowError.textContent = json.message;
         }
     } catch (err) {
         console.error('Borrow error:', err);
-        alert('Something went wrong. Please try again.');
+        borrowError.textContent = 'Something went wrong. Please try again.';
+    } finally {
+        modalConfirm.disabled = false;
+        modalCancel.disabled = false;
+    }
+    if (successful) {
+        closeBorrowModal();
+        searchBooks();
     }
 }
+
+borrowForm.addEventListener('submit', confirmBorrow);
+modalCancel.addEventListener('click', closeBorrowModal);
+modal.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeBorrowModal();
+    if (event.key === 'Tab') {
+        const first = modalReturnDate;
+        const last = modalConfirm;
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+        }
+    }
+});
 
 /* ---------- events ---------- */
 

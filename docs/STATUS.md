@@ -1,16 +1,14 @@
 # Status
-Updated: 2026-10-19 | Branch: `login-implementation`
+Updated: 2026-10-23 | Branch: `frontend-pages`
 
 ## Done
-- Backend, database, API merged into `main`.
-- Login + admin dashboard working; role guards in place.
-- Catalogue page: styled, search, category filter, borrow functional.
-- Local hosting via XAMPP + ngrok tunnel (public URL live).
-
+- Backend/DB/API, student/librarian pages and login flash fix implemented.
+- Admin loans: actual saved fine amounts, safe HTML output and shared helpers.
+- Borrowing History, simulated payment records and persistent receipt links implemented.
+- Borrow modal: selectable due date, Lagos limits and inline error feedback.
+- Librarian-only returns: API/class checks, admin confirmation button, student guidance and updated tests.
+- Tests passed: 13 PHP unit, 23 isolated database/API and 22 browser cases; cleanup confirmed.
+- Browser mobile-width/print-CSS checks and four real local screenshots completed.
+- Learning guides/testing log written; final checks passed for 23 PHP/JavaScript files and 92 guide links.
 ## Next
-- Student "My Loans and Returns" page: view loan requests, confirmed loans, return books requests and confirmed returns.
-- Admin dashboard to approve borrow requests and confirm book returns
-- Improve book borrows flow by allowing users set their own desired return date to be approved by the librarian 
-
-## Test logins
-- Student: `221345` / `Password123` | Librarian: `bakinyemi` / `Password123`
+- Human acceptance review pending: real XAMPP URLs, phone/keyboard usability and print preview (see TESTING.md).

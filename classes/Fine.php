@@ -50,7 +50,10 @@ class Fine
     {
         $stmt = $this->db->prepare(
             "SELECT f.fine_id, f.loan_id, v.book_title, v.due_date, v.return_date,
-                    f.days_late, f.amount, f.status, f.created_at, f.paid_at
+                    f.days_late, f.amount, f.status, f.created_at, f.paid_at,
+                    (SELECT p.reference FROM payments p
+                      WHERE p.fine_id = f.fine_id AND p.status = 'successful'
+                      ORDER BY p.payment_id DESC LIMIT 1) AS payment_reference
                FROM fines f
                JOIN v_loan_details v ON v.loan_id = f.loan_id
               WHERE f.matric_number = ?
