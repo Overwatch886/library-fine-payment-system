@@ -59,7 +59,6 @@ The screenshots below were captured by the browser tests using sample data. They
 | [successful-receipt.png](screenshots/successful-receipt.png) | A successful simulated ₦700.00 Card record reopened through the paid fine's persistent receipt link. |
 | [due-date-mobile.png](screenshots/due-date-mobile.png) | The catalogue borrowing dialog with a selectable return date at a 390 × 844 phone viewport. |
 
-The root and subfolder payment tests use the same screenshot names; the subfolder run overwrites the two payment screenshots. The unusual title is only used in its own safety test, not in payment screenshots. Screenshots are saved only when explicitly requested; automatic screenshots, traces, and videos are off.
 
 ## Boundaries of this evidence
 
@@ -76,17 +75,18 @@ The root and subfolder payment tests use the same screenshot names; the subfolde
 
 A student or teammate must complete this section. Passing automated tests does not count as checking these boxes.
 
-- [ ] Sign in through the real XAMPP URL. Check that navigation works and the login message appears only once.
-- [ ] Pick a return date, borrow an available book, and check that the date is clear in My Loans and History.
+- [x] Sign in through the real XAMPP URL. Check that navigation works and the login message appears only once.
+- [x] Pick a return date, borrow an available book, and check that the date is clear in My Loans and History.
 - [ ] Try to borrow a book when you have an unpaid fine or when no copies are available. Check that the error message tells you what to do.
-- [ ] Check the Borrowed, Overdue, and Returned rows in History. Confirm the difference between a saved fine and an estimate for a book still out.
-- [ ] Using sample data only, try a declined and a successful payment. Check that the warning makes it clear no real money moved.
-- [ ] Reload My Loans and reopen a successful payment. Check that the earlier failed attempt still shows as Failed.
-- [ ] Open the real print preview. Check that details are readable, page breaks look right, and the navigation, footer, and print button are hidden.
-- [ ] Use a phone or narrow browser window and the keyboard. Check scrolling, the date picker, all payment controls, focus order, and text readability.
-- [ ] Confirm the pages, explanations, and evidence meet the assignment requirements. Note any remaining issues.
+    - Sure, you can't borrow when you have an unpaid saved fine, but it's a different case when you have an unpaid accruing fine for not returning the book yet. It am still delibrating at what point a user should not be allowed to borrow again for accruing fines on unreturned books. I may not decide in time, since this is just a test project, but this is probably one of the limitations of the system. 
+- [x] Check the Borrowed, Overdue, and Returned rows in History. Confirm the difference between a saved fine and an estimate for a book still out.
+- [x] Using sample data only, try a declined and a successful payment. Check that the warning makes it clear no real money moved.
+- [x] Reload My Loans and reopen a successful payment. Check that the earlier failed attempt still shows as Failed.
+- [x] Open the real print preview. Check that details are readable, page breaks look right, and the navigation, footer, and print button are hidden.
+- [x] Use a phone or narrow browser window and the keyboard. Check scrolling, the date picker, all payment controls, focus order, and text readability.
+- [x] Confirm the pages, explanations, and evidence meet the assignment requirements. Note any remaining issues.
 
-Reviewer: **not yet recorded**. Review date: **not yet recorded**. Outcome/issues: **pending**.
+Reviewer: **Israel Olawuyi**. Review date: **24th October 2026**. Outcome/issues: **System can be considered usable**.
 
 ## Learning and workflow references
 
