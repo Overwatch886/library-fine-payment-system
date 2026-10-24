@@ -2,7 +2,7 @@
 
 Date: **23 October 2026**. Branch: **frontend-pages**.
 
-This record is for students, teammates and the assignment reviewer. It separates observed automated results from the human acceptance review, which is still pending.
+This record is for students, teammates, and the reviewer. It shows what the automated tests found. The human review is still pending.
 
 ## Verified local runs
 
@@ -20,37 +20,37 @@ This record is for students, teammates and the assignment reviewer. It separates
 | Final changed-file syntax pass | **23 PHP/JavaScript files passed**, including PHP-bearing HTML views |
 | Local guide-link check | **92 targets exist**; referenced source-line ranges stay within their files |
 
-These are named test cases, not the total number of assertions. Several cases perform multiple comparisons. The latest browser run followed the change that confined the unusual book title to its safety case and made the mobile screenshot capture only the phone viewport. An earlier successful browser run took 45.8 seconds.
+These are test case counts, not assertion counts. Some cases run several checks. The latest browser run used the updated safety test (unusual title only in its own case) and captured the mobile screenshot at phone size only. An earlier run took 45.8 seconds.
 
-Verified tools: **PHP 8.2.12**, **Node.js 22.23.2**, **npm 10.9.8**, **Playwright 1.58.2**. Browser checks used the installed Chromium headless shell. No claim is made here about an unverified database-server version or exact browser build.
+Tools used: **PHP 8.2.12**, **Node.js 22.23.2**, **npm 10.9.8**, **Playwright 1.58.2**. Browser checks ran on the installed Chromium headless shell. The database server version and exact browser build were not verified.
 
 ## What was checked
 
 ### PHP unit checks
 
-Eight fine-calculation cases cover negative/zero days, normal daily amounts, the cap boundary and values above it. Four amount-formatting cases check two decimal places and rounding. One application-error case checks its message and HTTP status.
+Eight cases test fine calculation: negative/zero days, normal amounts, the cap, and values above it. Four cases check that amounts show two decimal places and round correctly. One case checks the error message and HTTP status.
 
 ### Isolated database/API checks
 
-The 23 cases exercise login/logout and session behaviour, nested redirects and one-time flash, role restrictions, book search, default/selected/invalid due dates, borrowing limits, unpaid fines and unavailable copies, own/repeated/other-student returns, late fine creation and the cap, all simulated channels, rejected payment input, persistent successful references, receipt privacy and history.
+The 23 cases cover: login/logout and sessions, redirects and one-time messages, role restrictions, book search, due dates (default, selected, invalid), borrowing limits, unpaid fines, unavailable copies, returns (own, repeated, other student), late fines and the cap, all payment channels, rejected payment input, persistent receipt links, receipt privacy, and history.
 
-Assertions check actual saved rows as well as API responses. A declined simulated payment remains recorded while its fine stays unpaid; a successful retry marks the fine paid. Repeated payment is rejected. The stored payment rows do not contain the simulated card strings used in the check.
+Each case checks both the API response and the rows saved in the database. A declined payment stays recorded and the fine stays unpaid. A successful retry marks the fine as paid. Paying twice is rejected. The saved payment rows do not contain the test card numbers.
 
 ### Browser checks
 
-The 18 cases use the real login form and interactive pages on the isolated local PHP server. They check date selection and persistence, return/history updates, borrowing errors and pending controls, literal rendering of a quoted HTML-looking title, decline then success, persistent receipt links, non-card channels, receipt errors and another student's access.
+The 18 cases use the real login form and pages on the local test server. They check: date selection and saving, return/history updates, borrowing errors and disabled controls, a title with HTML characters shown as plain text, a declined then successful payment, persistent receipt links, non-card payment channels, receipt errors, and access by another student.
 
-Both root URLs and an emulated `/library-demo` project prefix are exercised. Keyboard checks cover the borrowing dialog's initial focus, boundary Tab/Shift+Tab, Escape and restored focus. Some loading/error/session-expiry states are deliberately supplied through intercepted browser requests; those test the frontend response, not an actual backend outage.
+Tests run on both the root URL and a `/library-demo` subfolder. Keyboard checks cover the borrowing dialog: initial focus, Tab/Shift+Tab at the edges, Escape, and focus returning to the right place. Some loading, error, and session-expiry states are faked by intercepting browser requests. These test how the frontend reacts, not a real server outage.
 
 ## Setup issue encountered and resolved
 
-The first integration run produced **1 pass and 22 failures**, mostly HTTP 500 responses. The isolated server could not use the intended Windows session-file path when it was passed through a command-line PHP setting.
+The first integration run gave 1 pass and 22 failures, mostly HTTP 500 errors. The test server could not use the Windows session-file path when set through a command-line PHP option.
 
-The fix passes `LIBRARY_TEST_SESSION_PATH` to the owned server and calls `session_save_path()` in its router before app sessions start. The integration rerun passed all 23 cases. This was a test-server setup problem; it did not require changing the app's borrowing or payment rules.
+The fix passes `LIBRARY_TEST_SESSION_PATH` to the test server and calls `session_save_path()` in the router before any app session starts. The rerun passed all 23 cases. This was a test-server setup issue, not a bug in the borrowing or payment logic.
 
 ## Real screenshot evidence
 
-The files below were captured by the successful browser suite from generated sample data. They are not fabricated records, real payments or human acceptance approval. They remain project files; they have not been published externally.
+The screenshots below were captured by the browser tests using sample data. They are not real payments or human approval. They are project files and have not been shared externally.
 
 | File | Caption and scenario |
 | --- | --- |
@@ -59,38 +59,38 @@ The files below were captured by the successful browser suite from generated sam
 | [successful-receipt.png](screenshots/successful-receipt.png) | A successful simulated ₦700.00 Card record reopened through the paid fine's persistent receipt link. |
 | [due-date-mobile.png](screenshots/due-date-mobile.png) | The catalogue borrowing dialog with a selectable return date at a 390 × 844 phone viewport. |
 
-Root/subfolder payment cases use the same screenshot names; the later subfolder case replaces those two files. The unusual title fixture is used only in its safety case, not in ordinary payment evidence. Screenshots are selected explicitly; automatic screenshots, traces and videos are disabled.
+The root and subfolder payment tests use the same screenshot names; the subfolder run overwrites the two payment screenshots. The unusual title is only used in its own safety test, not in payment screenshots. Screenshots are saved only when explicitly requested; automatic screenshots, traces, and videos are off.
 
 ## Boundaries of this evidence
 
-- Print checks replace `window.print()` with a test function and apply print CSS. They verify the button wiring and hidden navigation/footer/control, **not** an OS print dialog, printer or exported PDF.
-- Phone checks compare document width on history, My Loans and receipt at 390 × 844. The borrowing dialog is captured at that size. This is not approval of every breakpoint, zoom level, touch interaction or assistive tool.
-- The router emulates a project subfolder. Actual XAMPP/Apache path configuration still needs a manual check.
-- The borrowing dialog has the tested keyboard boundaries; the payment dialog does not have the same complete focus handling. No full accessibility certification is claimed.
-- Not every HTTP method, raw malformed JSON, concurrency scenario or production deployment is covered. This is not an exhaustive security audit.
-- Normal cleanup was confirmed. Forced process termination or machine shutdown can prevent cleanup. Ownership mismatches intentionally refuse database deletion.
-- No real money moves. Payment inserts exclude card digits, but externally configured logging or browser/proxy tools could record requests. Never use real card information.
-- Normal test traffic targets localhost. The installer reported about 110.2 MiB for the headless shell/support files; npm transfer and total device/session traffic were not comprehensively measured. No additional browser download is needed for the installed setup.
+- Print checks replace `window.print()` with a test function and apply the print CSS. They confirm the button works and that navigation, footer, and controls are hidden. They do not test a real print dialog, printer, or PDF export.
+- Phone checks compare page width on History, My Loans, and Receipt at 390 × 844. The borrowing dialog is also captured at that size. This does not cover every breakpoint, zoom level, touch interaction, or screen reader.
+- The test router simulates a subfolder install. A real XAMPP/Apache setup still needs a manual check.
+- The borrowing dialog has tested keyboard navigation. The payment dialog does not have the same level of focus handling. No full accessibility certification is claimed.
+- Not every HTTP method, malformed JSON input, concurrent request, or production setup is covered. This is not a security audit.
+- Normal cleanup was confirmed. Killing the process or shutting down the machine can skip cleanup. If the database owner does not match, deletion is refused on purpose.
+- No real money moves. Card numbers are not saved in the database, but server logs or browser/proxy tools could still record requests. Never enter a real card number.
+- All test traffic goes to localhost. The installer downloaded about 110.2 MiB for the headless browser and support files. Total npm transfer and session traffic were not measured. No extra browser download is needed.
 
 ## Human acceptance review — PENDING
 
-A student or teammate must complete this section. Automated passes do not tick these boxes on their behalf.
+A student or teammate must complete this section. Passing automated tests does not count as checking these boxes.
 
-- [ ] Sign in through the actual XAMPP project URL; confirm navigation and one-time login messages.
-- [ ] Choose a return date, borrow an available book and confirm the saved date is understandable in My Loans and History.
-- [ ] Read an unpaid-fine or unavailable-book rejection; confirm the message explains what to do.
-- [ ] Review Borrowed, Overdue and Returned history rows and the distinction between saved fines and estimates for books still out.
-- [ ] Using sample data only, try a declined and successful test payment; confirm the warning makes clear that no real money moved.
-- [ ] Reload My Loans and reopen a successful record; confirm the failed attempt's status remains Failed after a successful retry.
-- [ ] Open real print preview; check readable details, page breaks and absence of navigation/footer/print button.
-- [ ] Use a phone or narrow browser and keyboard; review scrolling, date control, all payment controls, focus and text readability.
-- [ ] Confirm these pages, explanations and evidence meet the assignment's requirements; record any remaining issues.
+- [ ] Sign in through the real XAMPP URL. Check that navigation works and the login message appears only once.
+- [ ] Pick a return date, borrow an available book, and check that the date is clear in My Loans and History.
+- [ ] Try to borrow a book when you have an unpaid fine or when no copies are available. Check that the error message tells you what to do.
+- [ ] Check the Borrowed, Overdue, and Returned rows in History. Confirm the difference between a saved fine and an estimate for a book still out.
+- [ ] Using sample data only, try a declined and a successful payment. Check that the warning makes it clear no real money moved.
+- [ ] Reload My Loans and reopen a successful payment. Check that the earlier failed attempt still shows as Failed.
+- [ ] Open the real print preview. Check that details are readable, page breaks look right, and the navigation, footer, and print button are hidden.
+- [ ] Use a phone or narrow browser window and the keyboard. Check scrolling, the date picker, all payment controls, focus order, and text readability.
+- [ ] Confirm the pages, explanations, and evidence meet the assignment requirements. Note any remaining issues.
 
 Reviewer: **not yet recorded**. Review date: **not yet recorded**. Outcome/issues: **pending**.
 
 ## Learning and workflow references
 
-- [Beginner test walkthrough](../tests/README.md): setup → action → expected result → cleanup, with every file and case explained.
-- [Implementation guide](IMPLEMENTATION_GUIDE.md): each changed feature line/block and its connection to PHP, API and database logic.
-- [Simulated payment workflow](PAYMENT_WORKFLOW.md): attempts, fine status, privacy and reopening records.
-- [Current status](STATUS.md): completed work and remaining human review.
+- [Beginner test walkthrough](../tests/README.md): setup, action, expected result, cleanup, with every file and case explained.
+- [Implementation guide](IMPLEMENTATION_GUIDE.md): each changed line/block and how it connects to the PHP, API, and database logic.
+- [Simulated payment workflow](PAYMENT_WORKFLOW.md): payment attempts, fine status, privacy, and reopening records.
+- [Current status](STATUS.md): what is done and what still needs human review.
