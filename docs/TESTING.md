@@ -9,9 +9,7 @@ The system is verified at three automated layers plus a manual acceptance pass:
 | Unit | 13 | Class logic in isolation (fine calculation, amount formatting, exception handling) |
 | Integration | 23 | API endpoints against a real MySQL database (auth, search, borrow, return, fines, payments, receipts, history, access control) |
 | Browser (E2E) | 22 | Full user flows in headless Chromium: login, catalogue, borrow modal, due-date picker, return, payment, receipt, mobile width, print CSS |
-| Manual acceptance | — | Real XAMPP URLs, phone/keyboard usability, print preview |
-
-All automated tests run against an isolated, auto-generated database (`ui_library_test_*`). They never touch the application database. The launcher creates the database, starts a local PHP server, runs the suite, and cleans up.
+| User acceptance | — | Real users, Real XAMPP URLs, usability tests, print preview |
 
 ## What each layer covers
 
@@ -71,7 +69,7 @@ The guidelines require demonstrating both outcomes. The automated suite covers:
 | Receipt | Owner or librarian → full details | Anonymous / wrong student / missing ref → 401 / 404 / 400 |
 
 ## Evidence
-
+*All evidence is stored in the github repository*
 - Four screenshots in `docs/screenshots/`: catalogue, borrow modal, successful payment receipt, failed payment record.
 - Full test source in `tests/` (unit, integration, browser).
 - Run commands and line-by-line walkthroughs in `tests/README.md`.
@@ -85,7 +83,6 @@ The guidelines require demonstrating both outcomes. The automated suite covers:
 | Integration | 23 | 0 |
 | Browser | 22 | 0 |
 
-Cleanup confirmed: generated database dropped, server stopped, temp files removed.
 
 ## Manual acceptance checklist
 
@@ -107,7 +104,7 @@ Complete on a real XAMPP setup (not the test server):
 - [ ] Keyboard: Tab/Shift+Tab through borrow modal, Escape closes
 
 ## How to re-run
-
+Visit the Github Repo at https://github.com/Overwatch886/library-fine-payment-system and clone the repository. Then run the following codelines
 ```sh
 # Unit (no database needed)
 php tests/unit.php
@@ -119,4 +116,3 @@ php tests/run.php integration
 php tests/run.php browser
 ```
 
-See `tests/README.md` for prerequisites, safety notes, and troubleshooting.
